@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "juniper.monotone.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": ["AnimalEntityAccessor", "FeedingMixin", "HighlightMixin"],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
