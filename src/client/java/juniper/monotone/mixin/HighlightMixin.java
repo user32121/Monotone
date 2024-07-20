@@ -15,7 +15,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 public abstract class HighlightMixin {
     @Inject(method = "hasOutline", at = @At("HEAD"), cancellable = true)
     private void hasOutline(Entity entity, CallbackInfoReturnable<Boolean> info) {
-        if ((Object) entity instanceof FeedingInterface aea && HighlightTarget.highlight.getOrDefault(HighlightTarget.CAN_FEED, false) && !((AnimalEntity) entity).isBaby()
+        if ((Object) entity instanceof FeedingInterface aea && HighlightTarget.HIGHLIGHT.getOrDefault(HighlightTarget.CAN_FEED, false) && !((AnimalEntity) entity).isBaby()
                 && entity.getWorld().getTime() - aea.getLastFed() >= AnimalEntityAccessor.getBREEDING_COOLDOWN()) {
             info.setReturnValue(true);
         }
