@@ -20,6 +20,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 
 public enum RotationPlane {
@@ -90,5 +91,13 @@ public enum RotationPlane {
         float max = FloatArgumentType.getFloat(ctx, MAX_ARG.getName());
         float deviance = FloatArgumentType.getFloat(ctx, DEVIANCE_ARG.getName());
         return setDeviance(ctx, plane, min, max, deviance);
+    }
+
+    public static float limitIfSet(RotationPlane plane, float value) {
+        Pair<Float, Float> limit = LIMITS.get(plane);
+        if (limit == null) {
+            return value;
+        }
+        return MathHelper.clamp(value, limit.getLeft(), limit.getRight());
     }
 }

@@ -2,7 +2,12 @@
   "required": true,
   "package": "juniper.monotone.mixin",
   "compatibilityLevel": "JAVA_21",
-  "client": ["AnimalEntityAccessor", "FeedingMixin", "HighlightMixin"],
+  "client": [
+    "AnimalEntityAccessor",
+    "FeedingMixin",
+    "HighlightMixin",
+    "RotationLimitMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
