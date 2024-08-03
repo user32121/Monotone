@@ -6,7 +6,8 @@
     "AnimalEntityAccessor",
     "FeedingMixin",
     "HighlightMixin",
-    "RotationLimitMixin"
+    "RotationLimitMixin",
+    "BrightnessMixin"
   ],
   "injectors": {
     "defaultRequire": 1

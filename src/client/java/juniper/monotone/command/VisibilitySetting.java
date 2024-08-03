@@ -20,17 +20,17 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandSource;
 import net.minecraft.text.Text;
 
-public enum HighlightTarget {
-    CAN_FEED;
+public enum VisibilitySetting {
+    CAN_FEED, BRIGHT_VISION;
 
-    public static class HighlightTargetArgument implements ArgumentType<HighlightTarget> {
+    public static class HighlightTargetArgument implements ArgumentType<VisibilitySetting> {
         private static final DynamicCommandExceptionType EXCEPTION_TYPE = new DynamicCommandExceptionType(target -> Text.literal("Unknown target: " + target));
 
         @Override
-        public HighlightTarget parse(StringReader reader) throws CommandSyntaxException {
+        public VisibilitySetting parse(StringReader reader) throws CommandSyntaxException {
             String s = reader.readUnquotedString();
             try {
-                return Enum.valueOf(HighlightTarget.class, s.toUpperCase());
+                return Enum.valueOf(VisibilitySetting.class, s.toUpperCase());
             } catch (IllegalArgumentException e) {
                 throw EXCEPTION_TYPE.createWithContext(reader, s);
             }
@@ -42,19 +42,19 @@ public enum HighlightTarget {
         }
     }
 
-    public static final Map<HighlightTarget, Boolean> HIGHLIGHT = new HashMap<>();
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, HighlightTarget> TARGET_ARG = ClientCommandManager.argument("target", new HighlightTargetArgument());
+    public static final Map<VisibilitySetting, Boolean> HIGHLIGHT = new HashMap<>();
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, VisibilitySetting> SETTING_ARG = ClientCommandManager.argument("setting", new HighlightTargetArgument());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, Boolean> VALUE_ARG = ClientCommandManager.argument("value", BoolArgumentType.bool());
 
     public static int getHighlight(CommandContext<FabricClientCommandSource> ctx) {
-        HighlightTarget target = ctx.getArgument(TARGET_ARG.getName(), HighlightTarget.class);
+        VisibilitySetting target = ctx.getArgument(SETTING_ARG.getName(), VisibilitySetting.class);
         boolean b = HIGHLIGHT.getOrDefault(target, false);
         ctx.getSource().sendFeedback(Text.literal(String.format("Highlight for %s is %s", target, b)));
         return 1;
     }
 
     public static int setHighlight(CommandContext<FabricClientCommandSource> ctx) {
-        HighlightTarget target = ctx.getArgument(TARGET_ARG.getName(), HighlightTarget.class);
+        VisibilitySetting target = ctx.getArgument(SETTING_ARG.getName(), VisibilitySetting.class);
         boolean b = BoolArgumentType.getBool(ctx, VALUE_ARG.getName());
         HIGHLIGHT.put(target, b);
         ctx.getSource().sendFeedback(Text.literal(String.format("Highlight for %s set to %s", target, b)));
