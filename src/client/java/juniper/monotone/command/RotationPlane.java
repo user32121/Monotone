@@ -50,6 +50,10 @@ public enum RotationPlane {
     public static final RequiredArgumentBuilder<FabricClientCommandSource, Float> MIN_ARG = ClientCommandManager.argument("min", FloatArgumentType.floatArg());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, Float> MAX_ARG = ClientCommandManager.argument("max", FloatArgumentType.floatArg());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, Float> DEVIANCE_ARG = ClientCommandManager.argument("deviance", FloatArgumentType.floatArg());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, Float> SOFTCAP_ARG = ClientCommandManager
+            .argument("softcap_alpha", FloatArgumentType.floatArg());
+
+    private static float softcap_alpha;
 
     public static int getLimit(CommandContext<FabricClientCommandSource> ctx) {
         RotationPlane plane = ctx.getArgument(PLANE_ARG.getName(), RotationPlane.class);
@@ -69,11 +73,13 @@ public enum RotationPlane {
         return 1;
     }
 
-    public static int setDeviance(CommandContext<FabricClientCommandSource> ctx, RotationPlane plane, float min, float max, float deviance) {
+    public static int setDeviance(CommandContext<FabricClientCommandSource> ctx, RotationPlane plane, float min,
+            float max, float deviance, float alpha) {
         Random rng = Random.create();
         min += (rng.nextFloat() * 2 - 1) * deviance;
         max += (rng.nextFloat() * 2 - 1) * deviance;
-        RotationPlane.LIMITS.put(plane, new Pair<Float, Float>(min, max));
+        LIMITS.put(plane, new Pair<Float, Float>(min, max));
+        RotationPlane.softcap_alpha = alpha;
         ctx.getSource().sendFeedback(Text.literal(String.format("Limit for %s set to [%s, %s]", plane, min, max)));
         return 1;
     }
@@ -82,7 +88,7 @@ public enum RotationPlane {
         RotationPlane plane = ctx.getArgument(PLANE_ARG.getName(), RotationPlane.class);
         float min = FloatArgumentType.getFloat(ctx, MIN_ARG.getName());
         float max = FloatArgumentType.getFloat(ctx, MAX_ARG.getName());
-        return setDeviance(ctx, plane, min, max, 0);
+        return setDeviance(ctx, plane, min, max, 0, 0);
     }
 
     public static int setLimitWithDeviance(CommandContext<FabricClientCommandSource> ctx) {
@@ -90,7 +96,16 @@ public enum RotationPlane {
         float min = FloatArgumentType.getFloat(ctx, MIN_ARG.getName());
         float max = FloatArgumentType.getFloat(ctx, MAX_ARG.getName());
         float deviance = FloatArgumentType.getFloat(ctx, DEVIANCE_ARG.getName());
-        return setDeviance(ctx, plane, min, max, deviance);
+        return setDeviance(ctx, plane, min, max, deviance, 0);
+    }
+
+    public static int setLimitWithDevianceSoftcap(CommandContext<FabricClientCommandSource> ctx) {
+        RotationPlane plane = ctx.getArgument(PLANE_ARG.getName(), RotationPlane.class);
+        float min = FloatArgumentType.getFloat(ctx, MIN_ARG.getName());
+        float max = FloatArgumentType.getFloat(ctx, MAX_ARG.getName());
+        float deviance = FloatArgumentType.getFloat(ctx, DEVIANCE_ARG.getName());
+        float softcap_alpha = FloatArgumentType.getFloat(ctx, SOFTCAP_ARG.getName());
+        return setDeviance(ctx, plane, min, max, deviance, softcap_alpha);
     }
 
     public static float limitIfSet(RotationPlane plane, float value) {
@@ -98,6 +113,7 @@ public enum RotationPlane {
         if (limit == null) {
             return value;
         }
-        return MathHelper.clamp(value, limit.getLeft(), limit.getRight());
+        float clamped = MathHelper.clamp(value, limit.getLeft(), limit.getRight());
+        return (1 - softcap_alpha) * clamped + softcap_alpha * value;
     }
 }
