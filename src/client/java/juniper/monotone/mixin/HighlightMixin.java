@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import juniper.monotone.command.VisibilitySetting;
-import juniper.monotone.mixinInterfaces.FeedingInterface;
+import juniper.monotone.mixinInterface.FeedingInterface;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.AnimalEntity;

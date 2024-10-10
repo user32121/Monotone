@@ -6,7 +6,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import juniper.monotone.Monotone;
 import juniper.monotone.command.RotationPlane;
+import juniper.monotone.command.TaskQueue;
 import juniper.monotone.command.VisibilitySetting;
+import juniper.monotone.pathfinding.PathFind;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -23,6 +25,15 @@ public class MonotoneCommand {
                                                 RotationPlane::setLimitWithDeviance)
                                                 .then(RotationPlane.SOFTCAP_ARG
                                                         .executes(RotationPlane::setLimitWithDevianceSoftcap)))))));
+        makeCommand("tasks",
+                node -> node.then(ClientCommandManager.literal("start").executes(TaskQueue::startTasks)).then(ClientCommandManager.literal("stop").executes(TaskQueue::stopTasks))
+                        .then(ClientCommandManager.literal("skip").executes(TaskQueue::skipTask)).then(ClientCommandManager.literal("clear").executes(TaskQueue::clearTasks))
+                        .then(ClientCommandManager.literal("view").executes(TaskQueue::viewTasks)).then(TaskQueue.makeInfoCommand()).then(TaskQueue.makeAddCommand()));
+        makeCommand("pathfinding",
+                node -> node.then(ClientCommandManager.literal("notify_interval").executes(PathFind::getNotifyInterval).then(PathFind.INTERVAL_ARG.executes(PathFind::setNotifyInterval)))
+                        .then(ClientCommandManager.literal("search_radius").executes(PathFind::getSearchRadius).then(PathFind.RADIUS_ARG.executes(PathFind::setSearchRadius)))
+                        .then(ClientCommandManager.literal("search_angle").executes(PathFind::getSearchAngle).then(PathFind.ANGLE_ARG.executes(PathFind::setSearchAngle)))
+                        .then(ClientCommandManager.literal("show_path").executes(PathFind::getShowPath).then(PathFind.ENABLED_ARG.executes(PathFind::setShowPath))));
     }
 
     private static void makeCommand(String command, Function<LiteralArgumentBuilder<FabricClientCommandSource>, LiteralArgumentBuilder<FabricClientCommandSource>> buildCommand) {
