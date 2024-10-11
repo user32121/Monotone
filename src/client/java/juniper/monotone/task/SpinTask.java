@@ -7,15 +7,16 @@ import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
+import juniper.monotone.mixin.MouseInputAccessor;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
-//TODO control using player input
 public class SpinTask implements Task {
     private float rotation;
+    private float targetYaw;
 
     public SpinTask(float rotation) {
         this.rotation = rotation;
@@ -23,17 +24,19 @@ public class SpinTask implements Task {
 
     @Override
     public void prepare(MinecraftClient client) {
+        targetYaw = client.player.getYaw() + rotation;
     }
 
     @Override
     public boolean tick(MinecraftClient client) {
-        double move = MathHelper.sign(rotation);
-        float yaw = client.player.getYaw();
-        client.player.changeLookDirection(move * 10, 0);
-        float yaw2 = client.player.getYaw();
-        rotation -= yaw2 - yaw;
+        double move = MathHelper.sign(targetYaw - client.player.getYaw());
+        if (move != MathHelper.sign(rotation)) {
+            return true;
+        }
+        MouseInputAccessor mia = (MouseInputAccessor) (Object) client.mouse;
+        mia.setCursorDeltaX(mia.getCursorDeltaX() + move * 30);
         //finish when rotation changes sign
-        return move != MathHelper.sign(rotation);
+        return false;
     }
 
     @Override

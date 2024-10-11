@@ -1,6 +1,5 @@
 package juniper.monotone.pathfinding.steps;
 
-import juniper.monotone.Monotone;
 import juniper.monotone.mixin.MouseInputAccessor;
 import juniper.monotone.pathfinding.GridView;
 import juniper.monotone.pathfinding.PathFind.Tile.TILE_TYPE;
@@ -35,8 +34,8 @@ public class WalkStep implements Step {
     public boolean tick(MinecraftClient client, Vec3i destination) {
         float deltaAngle = MathHelper.subtractAngles((float) Math.toDegrees(Math.atan2(destination.getZ() + 0.5 - client.player.getZ(), destination.getX() + 0.5 - client.player.getX())) - 90,
                 client.player.getYaw());
-        MouseInputAccessor mim = (MouseInputAccessor) (Object) client.mouse;
-        mim.setCursorDeltaX(mim.getCursorDeltaX() - deltaAngle * 5);
+        MouseInputAccessor mia = (MouseInputAccessor) (Object) client.mouse;
+        mia.setCursorDeltaX(mia.getCursorDeltaX() - deltaAngle * 5);
 
         InputManager.forward = true;
         if (client.player.getBlockPos().equals(destination)) {
