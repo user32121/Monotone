@@ -13,6 +13,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
+//TODO control using player input
 public class SpinTask implements Task {
     private float rotation;
 

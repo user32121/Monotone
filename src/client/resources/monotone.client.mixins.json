@@ -8,7 +8,8 @@
     "HighlightMixin",
     "RotationLimitMixin",
     "BrightnessMixin",
-    "DebugRendererMixin"
+    "DebugRendererMixin",
+    "KeyInputMixin"
   ],
   "injectors": {
     "defaultRequire": 1

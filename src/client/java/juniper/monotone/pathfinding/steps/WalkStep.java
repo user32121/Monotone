@@ -2,15 +2,14 @@ package juniper.monotone.pathfinding.steps;
 
 import juniper.monotone.pathfinding.GridView;
 import juniper.monotone.pathfinding.PathFind.Tile.TILE_TYPE;
+import juniper.monotone.task.InputManager;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
-//TODO remove
-public class TeleportStep implements Step {
+public class WalkStep implements Step {
     private Vec3i offset;
 
-    public TeleportStep(Vec3i offset) {
+    public WalkStep(Vec3i offset) {
         this.offset = offset;
     }
 
@@ -30,7 +29,12 @@ public class TeleportStep implements Step {
 
     @Override
     public boolean tick(MinecraftClient client, Vec3i destination) {
-        client.player.setPosition(Vec3d.ofBottomCenter(destination));
-        return true;
+        //TODO turning
+        InputManager.forward = true;
+        if (client.player.getBlockPos().equals(destination)) {
+            InputManager.forward = false;
+            return true;
+        }
+        return false;
     }
 }
