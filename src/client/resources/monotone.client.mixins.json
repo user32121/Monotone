@@ -9,7 +9,8 @@
     "RotationLimitMixin",
     "BrightnessMixin",
     "DebugRendererMixin",
-    "KeyInputMixin"
+    "KeyInputMixin",
+    "MouseInputAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
