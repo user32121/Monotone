@@ -40,7 +40,7 @@ public class PathFind extends Thread {
     private static int notifyInterval = 5;
     private static float searchRadius = 2;
     private static float searchAngle = 60;
-    private static boolean showPath = false;
+    private static boolean showPath = true;
     static {
         STEPS.add(new WalkStep(new Vec3i(-1, 0, 0)));
         STEPS.add(new WalkStep(new Vec3i(1, 0, 0)));

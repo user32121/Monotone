@@ -24,7 +24,7 @@ import net.minecraft.text.Text;
 public class TaskQueue {
     private static final Queue<Task> taskQueue = new LinkedList<>();
     private static Task curTask = null;
-    private static boolean runningTasks = false;
+    private static boolean runningTasks = true;
 
     private static List<TaskFactory<?>> taskFactories = new ArrayList<>();
     static {
