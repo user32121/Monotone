@@ -10,10 +10,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
-public class WalkStep implements SmoothStep {
+public class SprintStep implements SmoothStep {
     public Vec3i offset;
 
-    public WalkStep(Vec3i offset) {
+    public SprintStep(Vec3i offset) {
         this.offset = offset;
     }
 
@@ -44,8 +44,10 @@ public class WalkStep implements SmoothStep {
         mia.setCursorDeltaX(mia.getCursorDeltaX() - deltaAngle * 2);
 
         InputManager.forward = true;
+        InputManager.sprint = true;
         if (client.player.getBlockPos().equals(destination)) {
             InputManager.forward = false;
+            InputManager.sprint = false;
             return true;
         }
         return false;

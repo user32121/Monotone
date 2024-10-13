@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import juniper.monotone.task.InputManager;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 
 @Mixin(KeyBinding.class)
@@ -14,15 +15,19 @@ public class KeyInputMixin {
     @Inject(method = "isPressed", at = @At("HEAD"), cancellable = true)
     private void isPressed(CallbackInfoReturnable<Boolean> info) {
         KeyBinding self = (KeyBinding) (Object) this;
-        if (InputManager.forward && self == MinecraftClient.getInstance().options.forwardKey) {
+        @SuppressWarnings("resource")
+        GameOptions options = MinecraftClient.getInstance().options;
+        if (InputManager.forward && self == options.forwardKey) {
             info.setReturnValue(true);
-        } else if (InputManager.back && self == MinecraftClient.getInstance().options.backKey) {
+        } else if (InputManager.back && self == options.backKey) {
             info.setReturnValue(true);
-        } else if (InputManager.left && self == MinecraftClient.getInstance().options.leftKey) {
+        } else if (InputManager.left && self == options.leftKey) {
             info.setReturnValue(true);
-        } else if (InputManager.right && self == MinecraftClient.getInstance().options.rightKey) {
+        } else if (InputManager.right && self == options.rightKey) {
             info.setReturnValue(true);
-        } else if (InputManager.jump && self == MinecraftClient.getInstance().options.jumpKey) {
+        } else if (InputManager.jump && self == options.jumpKey) {
+            info.setReturnValue(true);
+        } else if (InputManager.sprint && self == options.sprintKey) {
             info.setReturnValue(true);
         }
     }

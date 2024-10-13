@@ -15,10 +15,10 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
-import juniper.monotone.pathfinding.steps.DiagonalWalkStep;
+import juniper.monotone.pathfinding.steps.DiagonalSprintStep;
 import juniper.monotone.pathfinding.steps.JumpStep;
 import juniper.monotone.pathfinding.steps.Step;
-import juniper.monotone.pathfinding.steps.WalkStep;
+import juniper.monotone.pathfinding.steps.SprintStep;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
@@ -42,24 +42,24 @@ public class PathFind extends Thread {
     private static float searchAngle = 60;
     private static boolean showPath = true;
     static {
-        STEPS.add(new WalkStep(new Vec3i(-1, 0, 0)));
-        STEPS.add(new WalkStep(new Vec3i(1, 0, 0)));
-        STEPS.add(new WalkStep(new Vec3i(0, 0, -1)));
-        STEPS.add(new WalkStep(new Vec3i(0, 0, 1)));
+        STEPS.add(new SprintStep(new Vec3i(-1, 0, 0)));
+        STEPS.add(new SprintStep(new Vec3i(1, 0, 0)));
+        STEPS.add(new SprintStep(new Vec3i(0, 0, -1)));
+        STEPS.add(new SprintStep(new Vec3i(0, 0, 1)));
 
-        STEPS.add(new DiagonalWalkStep(new Vec3i(-1, 0, -1)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(-1, 0, 1)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(1, 0, -1)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(1, 0, 1)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(-1, 0, -1)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(-1, 0, 1)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(1, 0, -1)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(1, 0, 1)));
 
-        STEPS.add(new DiagonalWalkStep(new Vec3i(-2, 0, -1)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(-1, 0, -2)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(-2, 0, 1)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(-1, 0, 2)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(2, 0, -1)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(1, 0, -2)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(2, 0, 1)));
-        STEPS.add(new DiagonalWalkStep(new Vec3i(1, 0, 2)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(-2, 0, -1)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(-1, 0, -2)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(-2, 0, 1)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(-1, 0, 2)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(2, 0, -1)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(1, 0, -2)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(2, 0, 1)));
+        STEPS.add(new DiagonalSprintStep(new Vec3i(1, 0, 2)));
 
         STEPS.add(new JumpStep(new Vec3i(-1, 1, 0)));
         STEPS.add(new JumpStep(new Vec3i(1, 1, 0)));

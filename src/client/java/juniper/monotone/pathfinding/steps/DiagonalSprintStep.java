@@ -5,8 +5,8 @@ import juniper.monotone.pathfinding.PathFind.Tile.TILE_TYPE;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
-public class DiagonalWalkStep extends WalkStep {
-    public DiagonalWalkStep(Vec3i offset) {
+public class DiagonalSprintStep extends SprintStep {
+    public DiagonalSprintStep(Vec3i offset) {
         super(offset);
     }
 

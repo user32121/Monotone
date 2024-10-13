@@ -1,5 +1,4 @@
-pathfinding step types
-more convincing step movement
-sprintstep
+pathfinding step types (fallstep)
+more convincing mouse movement
 fix stuttering in sprintstep
 save settings to file
