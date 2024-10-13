@@ -1,5 +1,7 @@
 package juniper.monotone.pathfinding.steps;
 
+import org.jetbrains.annotations.Nullable;
+
 import juniper.monotone.mixin.MouseInputAccessor;
 import juniper.monotone.pathfinding.GridView;
 import juniper.monotone.pathfinding.PathFind.Tile.TILE_TYPE;
@@ -9,7 +11,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
 public class WalkStep implements Step {
-    private Vec3i offset;
+    protected Vec3i offset;
 
     public WalkStep(Vec3i offset) {
         this.offset = offset;
@@ -26,8 +28,15 @@ public class WalkStep implements Step {
     }
 
     @Override
-    public int getCost() {
-        return 10;
+    public int getCost(@Nullable Step prevStep) {
+        int smoothness = 0;
+        if (prevStep != null && prevStep instanceof WalkStep ws) {
+            //dot product, the closer the angles, the higher the smoothness
+            int dot = offset.getX() * ws.offset.getX() + offset.getZ() * ws.offset.getZ();
+            double dotNorm = dot / Math.sqrt(offset.getSquaredDistance(0, 0, 0)) / Math.sqrt(ws.offset.getSquaredDistance(0, 0, 0));
+            smoothness = (int) (2 * dotNorm);
+        }
+        return (int) (10 * Math.sqrt(offset.getSquaredDistance(0, 0, 0))) - smoothness;
     }
 
     @Override
@@ -35,7 +44,7 @@ public class WalkStep implements Step {
         float deltaAngle = MathHelper.subtractAngles((float) Math.toDegrees(Math.atan2(destination.getZ() + 0.5 - client.player.getZ(), destination.getX() + 0.5 - client.player.getX())) - 90,
                 client.player.getYaw());
         MouseInputAccessor mia = (MouseInputAccessor) (Object) client.mouse;
-        mia.setCursorDeltaX(mia.getCursorDeltaX() - deltaAngle * 5);
+        mia.setCursorDeltaX(mia.getCursorDeltaX() - deltaAngle * 2);
 
         InputManager.forward = true;
         if (client.player.getBlockPos().equals(destination)) {

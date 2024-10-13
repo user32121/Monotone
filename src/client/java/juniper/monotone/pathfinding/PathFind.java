@@ -15,6 +15,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
+import juniper.monotone.pathfinding.steps.DiagonalWalkStep;
 import juniper.monotone.pathfinding.steps.Step;
 import juniper.monotone.pathfinding.steps.WalkStep;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -40,10 +41,24 @@ public class PathFind extends Thread {
     private static float searchAngle = 60;
     private static boolean showPath = false;
     static {
-        STEPS.add(new WalkStep(new Vec3i(1, 0, 0)));
         STEPS.add(new WalkStep(new Vec3i(-1, 0, 0)));
-        STEPS.add(new WalkStep(new Vec3i(0, 0, 1)));
+        STEPS.add(new WalkStep(new Vec3i(1, 0, 0)));
         STEPS.add(new WalkStep(new Vec3i(0, 0, -1)));
+        STEPS.add(new WalkStep(new Vec3i(0, 0, 1)));
+
+        STEPS.add(new DiagonalWalkStep(new Vec3i(-1, 0, -1)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(-1, 0, 1)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(1, 0, -1)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(1, 0, 1)));
+
+        STEPS.add(new DiagonalWalkStep(new Vec3i(-2, 0, -1)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(-1, 0, -2)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(-2, 0, 1)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(-1, 0, 2)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(2, 0, -1)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(1, 0, -2)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(2, 0, 1)));
+        STEPS.add(new DiagonalWalkStep(new Vec3i(1, 0, 2)));
     }
 
     public static class Tile {
@@ -167,7 +182,7 @@ public class PathFind extends Thread {
                     if (newPos == null) {
                         continue;
                     }
-                    int newCost = grid.getTile(pos).cost + step.getCost();
+                    int newCost = grid.getTile(pos).cost + step.getCost(grid.getTile(pos).travelUsing);
                     if (newCost < grid.getTile(newPos).cost) {
                         Tile t = grid.getTile(newPos);
                         t.cost = newCost;
