@@ -22,6 +22,8 @@ public class KeyInputMixin {
             info.setReturnValue(true);
         } else if (InputManager.right && self == MinecraftClient.getInstance().options.rightKey) {
             info.setReturnValue(true);
+        } else if (InputManager.jump && self == MinecraftClient.getInstance().options.jumpKey) {
+            info.setReturnValue(true);
         }
     }
 }

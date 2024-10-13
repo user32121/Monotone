@@ -1,2 +1,5 @@
 pathfinding step types
 more convincing step movement
+default queue on
+default show path on
+sprintstep

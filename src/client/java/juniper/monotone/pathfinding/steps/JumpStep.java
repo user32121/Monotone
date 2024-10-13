@@ -10,17 +10,17 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
-public class WalkStep implements SmoothStep {
+public class JumpStep implements SmoothStep {
     public Vec3i offset;
 
-    public WalkStep(Vec3i offset) {
+    public JumpStep(Vec3i offset) {
         this.offset = offset;
     }
 
     @Override
     public Vec3i getNewPos(GridView grid, Vec3i oldPos) throws InterruptedException {
         Vec3i newPos = oldPos.add(offset);
-        if (!grid.hasTileType(newPos, TILE_TYPE.EMPTY) || !grid.hasTileType(newPos.up(), TILE_TYPE.EMPTY)
+        if (!grid.hasTileType(oldPos.up().up(), TILE_TYPE.EMPTY) || !grid.hasTileType(newPos, TILE_TYPE.EMPTY) || !grid.hasTileType(newPos.up(), TILE_TYPE.EMPTY)
                 || !grid.hasTileType(newPos.down(), TILE_TYPE.FLOOR)) {
             return null;
         }
@@ -33,7 +33,7 @@ public class WalkStep implements SmoothStep {
         if (prevStep instanceof SmoothStep ss) {
             smoothFactor = (int) (2 * getSmoothness(ss));
         }
-        return (int) (10 * Math.sqrt(offset.getSquaredDistance(0, 0, 0))) - smoothFactor;
+        return (int) (15 * Math.sqrt(offset.getSquaredDistance(0, 0, 0))) - smoothFactor;
     }
 
     @Override
@@ -44,8 +44,10 @@ public class WalkStep implements SmoothStep {
         mia.setCursorDeltaX(mia.getCursorDeltaX() - deltaAngle * 2);
 
         InputManager.forward = true;
+        InputManager.jump = true;
         if (client.player.getBlockPos().equals(destination)) {
             InputManager.forward = false;
+            InputManager.jump = false;
             return true;
         }
         return false;
