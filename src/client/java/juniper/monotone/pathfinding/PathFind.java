@@ -16,9 +16,10 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
 import juniper.monotone.pathfinding.steps.DiagonalSprintStep;
+import juniper.monotone.pathfinding.steps.FallStep;
 import juniper.monotone.pathfinding.steps.JumpStep;
-import juniper.monotone.pathfinding.steps.Step;
 import juniper.monotone.pathfinding.steps.SprintStep;
+import juniper.monotone.pathfinding.steps.Step;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
@@ -65,6 +66,13 @@ public class PathFind extends Thread {
         STEPS.add(new JumpStep(new Vec3i(1, 1, 0)));
         STEPS.add(new JumpStep(new Vec3i(0, 1, -1)));
         STEPS.add(new JumpStep(new Vec3i(0, 1, 1)));
+
+        for (int i = 0; i < 3; ++i) {
+            STEPS.add(new FallStep(new Vec3i(-1, -i, 0)));
+            STEPS.add(new FallStep(new Vec3i(1, -i, 0)));
+            STEPS.add(new FallStep(new Vec3i(0, -i, -1)));
+            STEPS.add(new FallStep(new Vec3i(0, -i, 1)));
+        }
     }
 
     public static class Tile {

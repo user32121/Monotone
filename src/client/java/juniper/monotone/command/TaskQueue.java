@@ -13,6 +13,7 @@ import com.mojang.brigadier.context.CommandContext;
 
 import juniper.monotone.task.NavigateTask.NavigateTaskFactory;
 import juniper.monotone.task.SpinTask.SpinTaskFactory;
+import juniper.monotone.task.InputManager;
 import juniper.monotone.task.Task;
 import juniper.monotone.task.Task.TaskFactory;
 import juniper.monotone.task.WaitTask.WaitTaskFactory;
@@ -77,8 +78,7 @@ public class TaskQueue {
     }
 
     public static int stopTasks(CommandContext<FabricClientCommandSource> ctx) {
-        runningTasks = false;
-        ctx.getSource().sendFeedback(Text.literal(String.format("Stopped tasks (%s unfinished and %s in queue)", curTask == null ? 0 : 1, taskQueue.size())));
+        stopTasks();
         return 1;
     }
 
@@ -92,6 +92,7 @@ public class TaskQueue {
     @SuppressWarnings("resource")
     public static void stopTasks() {
         runningTasks = false;
+        InputManager.reset();
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal(String.format("Stopped tasks (%s unfinished and %s in queue)", curTask == null ? 0 : 1, taskQueue.size())));
     }
 

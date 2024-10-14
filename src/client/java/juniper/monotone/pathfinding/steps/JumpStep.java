@@ -1,7 +1,5 @@
 package juniper.monotone.pathfinding.steps;
 
-import org.jetbrains.annotations.Nullable;
-
 import juniper.monotone.mixin.MouseInputAccessor;
 import juniper.monotone.pathfinding.GridView;
 import juniper.monotone.pathfinding.PathFind.Tile.TILE_TYPE;
@@ -25,15 +23,6 @@ public class JumpStep implements SmoothStep {
             return null;
         }
         return newPos;
-    }
-
-    @Override
-    public int getCost(@Nullable Step prevStep) {
-        int smoothFactor = 0;
-        if (prevStep instanceof SmoothStep ss) {
-            smoothFactor = (int) (2 * getSmoothness(ss));
-        }
-        return (int) (15 * Math.sqrt(offset.getSquaredDistance(0, 0, 0))) - smoothFactor;
     }
 
     @Override

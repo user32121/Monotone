@@ -1,4 +1,5 @@
-pathfinding step types (fallstep)
 more convincing mouse movement
 fix stuttering in sprintstep
 save settings to file
+parkour step
+use asd if dest is closer to that direction

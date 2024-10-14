@@ -1,5 +1,9 @@
 package juniper.monotone.task;
 
 public class InputManager {
-    static public boolean forward, back, left, right, jump, sprint;
+    public static boolean forward, back, left, right, jump, sprint;
+
+    public static void reset() {
+        forward = back = left = right = jump = sprint = false;
+    }
 }
