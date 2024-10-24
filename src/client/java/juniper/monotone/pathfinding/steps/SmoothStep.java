@@ -36,7 +36,10 @@ public interface SmoothStep extends Step {
         MouseInputAccessor mia = (MouseInputAccessor) (Object) client.mouse;
         mia.setCursorDeltaX(mia.getCursorDeltaX() - deltaAngle * 2);
 
-        InputManager.forward = true;
+        InputManager.forward = MathHelper.angleBetween(deltaAngle, 0) <= 60;
+        InputManager.left = MathHelper.angleBetween(deltaAngle, 90) <= 60;
+        InputManager.back = MathHelper.angleBetween(deltaAngle, 180) <= 60;
+        InputManager.right = MathHelper.angleBetween(deltaAngle, 270) <= 60;
         InputManager.sprint = true;
 
         if (client.player.getBlockPos().equals(destination)) {
