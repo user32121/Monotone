@@ -1,12 +1,10 @@
 package juniper.monotone.pathfinding.steps;
 
-import juniper.monotone.mixin.MouseInputAccessor;
 import juniper.monotone.pathfinding.GridView;
 import juniper.monotone.pathfinding.PathFind.Tile.TILE_TYPE;
 import juniper.monotone.task.InputManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
 public class FallStep implements SmoothStep {
@@ -33,16 +31,12 @@ public class FallStep implements SmoothStep {
     @Override
     public boolean tick(MinecraftClient client, Vec3i destination) {
         if (client.player.getBlockPos().equals(destination)) {
-            InputManager.forward = false;
             return true;
-        } else if (!client.player.getBlockPos().withY(destination.getY()).equals(destination)) {
-            float deltaAngle = MathHelper.subtractAngles((float) Math.toDegrees(Math.atan2(destination.getZ() + 0.5 - client.player.getZ(), destination.getX() + 0.5 - client.player.getX())) - 90,
-                    client.player.getYaw());
-            MouseInputAccessor mia = (MouseInputAccessor) (Object) client.mouse;
-            mia.setCursorDeltaX(mia.getCursorDeltaX() - deltaAngle * 2);
-            InputManager.forward = true;
+        } else if (client.player.getBlockPos().withY(destination.getY()).equals(destination)) {
+            InputManager.forward = false;
+            return false;
         }
-        return false;
+        return SmoothStep.super.tick(client, destination);
     }
 
     @Override

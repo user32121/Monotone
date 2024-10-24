@@ -59,6 +59,7 @@ public class NavigateTask implements Task {
 
         //follow path
         if (path.path == null || path.path.size() == 0) {
+            InputManager.reset();
             return true;
         }
         Pair<Vec3i, Tile> step = path.path.getFirst();
