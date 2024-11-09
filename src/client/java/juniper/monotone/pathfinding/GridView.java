@@ -32,7 +32,7 @@ public class GridView {
 
     public GridView(World world, ChunkPos start, ChunkPos target) {
         this.minY = world.getBottomY();
-        this.maxY = world.getTopY() - 1;
+        this.maxY = world.getBottomY() + world.getHeight() - 1;
         this.start = start;
         this.targetAngle = (float) Math.toDegrees(Math.atan2(target.z - start.z, target.x - start.x));
     }

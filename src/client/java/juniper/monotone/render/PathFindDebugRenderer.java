@@ -36,7 +36,7 @@ public class PathFindDebugRenderer implements Renderer {
             VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getDebugLineStrip(1.0));
             for (Pair<Vec3i, Tile> cur : path.path) {
                 Vec3i pos = cur.getLeft();
-                vertexConsumer.vertex(matrix4f, pos.getX() + 0.5f - (float) cameraX, pos.getY() + 0.5f - (float) cameraY, pos.getZ() + 0.5f - (float) cameraZ).color(0.0f, 1.0f, 0.0f, 1.0f).next();
+                vertexConsumer.vertex(matrix4f, pos.getX() + 0.5f - (float) cameraX, pos.getY() + 0.5f - (float) cameraY, pos.getZ() + 0.5f - (float) cameraZ).color(0.0f, 1.0f, 0.0f, 1.0f);
             }
             if (path.path.isEmpty()) {
                 paths.remove(i);

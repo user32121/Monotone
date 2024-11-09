@@ -49,7 +49,7 @@ public class NavigateTask implements Task {
 
         Text t = path.feedback.poll();
         if (t != null) {
-            client.player.sendMessage(t);
+            client.player.sendMessage(t, false);
         }
 
         //wait for pathfinding to finish
