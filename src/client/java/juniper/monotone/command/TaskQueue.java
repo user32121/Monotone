@@ -21,6 +21,7 @@ import juniper.monotone.task.WaitTask.WaitTaskFactory;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.Text;
 
 public class TaskQueue {
@@ -97,6 +98,7 @@ public class TaskQueue {
     }
 
     public static int skipTask(CommandContext<FabricClientCommandSource> ctx) {
+        InputManager.reset();
         if (curTask == null) {
             ctx.getSource().sendFeedback(Text.literal("No current task"));
             return 0;
@@ -138,5 +140,9 @@ public class TaskQueue {
                 curTask = null;
             }
         }
+    }
+
+    public static void tick(ClientWorld world) {
+        tick(MinecraftClient.getInstance());
     }
 }

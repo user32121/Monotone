@@ -20,7 +20,7 @@ public class Monotone implements ClientModInitializer {
         LOGGER.info(MODID + " init");
 
         MonotoneCommand.init();
-        ClientTickEvents.END_CLIENT_TICK.register(TaskQueue::tick);
+        ClientTickEvents.START_WORLD_TICK.register(TaskQueue::tick);
         ClientLifecycleEvents.CLIENT_STOPPING.register(MonotoneConfig::save);
     }
 }

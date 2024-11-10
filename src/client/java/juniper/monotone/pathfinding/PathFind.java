@@ -19,6 +19,7 @@ import juniper.monotone.Monotone;
 import juniper.monotone.pathfinding.steps.DiagonalSprintStep;
 import juniper.monotone.pathfinding.steps.FallStep;
 import juniper.monotone.pathfinding.steps.JumpStep;
+import juniper.monotone.pathfinding.steps.ParkourStep;
 import juniper.monotone.pathfinding.steps.SprintStep;
 import juniper.monotone.pathfinding.steps.Step;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -26,6 +27,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Pair;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
 /**
@@ -69,6 +71,14 @@ public class PathFind extends Thread {
             STEPS.add(new FallStep(new Vec3i(1, -i, 0)));
             STEPS.add(new FallStep(new Vec3i(0, -i, -1)));
             STEPS.add(new FallStep(new Vec3i(0, -i, 1)));
+        }
+
+        //TODO distance 5 jumps (4 block gap)
+        //currently it seems incapable of jumping those gaps for some reason
+        for (BlockPos offset : BlockPos.iterate(-4, -1, -4, 4, 1, 4)) {
+            if (!offset.isWithinDistance(Vec3i.ZERO, 1) && offset.isWithinDistance(Vec3i.ZERO, 4.001)) {
+                STEPS.add(new ParkourStep(new BlockPos(offset)));
+            }
         }
     }
 

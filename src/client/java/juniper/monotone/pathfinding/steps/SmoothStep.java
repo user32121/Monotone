@@ -17,7 +17,7 @@ public interface SmoothStep extends Step {
         if (prevStep instanceof SmoothStep ss) {
             smoothFactor = (int) (2 * getSmoothness(ss));
         }
-        return (int) (10 * Math.sqrt(getOffset().getSquaredDistance(0, 0, 0))) - smoothFactor;
+        return (int) (10 * Math.sqrt(getOffset().getSquaredDistance(Vec3i.ZERO))) - smoothFactor;
     }
 
     public default double getSmoothness(SmoothStep other) {
@@ -25,7 +25,7 @@ public interface SmoothStep extends Step {
         Vec3i offset1 = getOffset();
         Vec3i offset2 = other.getOffset();
         int dot = offset1.getX() * offset2.getX() + offset1.getZ() * offset2.getZ();
-        double dotNorm = dot / Math.sqrt(offset1.getSquaredDistance(0, 0, 0)) / Math.sqrt(offset2.getSquaredDistance(0, 0, 0));
+        double dotNorm = dot / Math.sqrt(offset1.getSquaredDistance(Vec3i.ZERO)) / Math.sqrt(offset2.getSquaredDistance(Vec3i.ZERO));
         return dotNorm;
     }
 

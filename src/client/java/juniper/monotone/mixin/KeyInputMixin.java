@@ -29,6 +29,8 @@ public class KeyInputMixin {
             info.setReturnValue(true);
         } else if (InputManager.sprint && self == options.sprintKey) {
             info.setReturnValue(true);
+        } else if (InputManager.sneak && self == options.sneakKey) {
+            info.setReturnValue(true);
         }
     }
 }
