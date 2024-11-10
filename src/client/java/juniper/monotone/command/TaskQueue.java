@@ -11,9 +11,10 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
+import juniper.monotone.Monotone;
+import juniper.monotone.task.InputManager;
 import juniper.monotone.task.NavigateTask.NavigateTaskFactory;
 import juniper.monotone.task.SpinTask.SpinTaskFactory;
-import juniper.monotone.task.InputManager;
 import juniper.monotone.task.Task;
 import juniper.monotone.task.Task.TaskFactory;
 import juniper.monotone.task.WaitTask.WaitTaskFactory;
@@ -25,7 +26,6 @@ import net.minecraft.text.Text;
 public class TaskQueue {
     private static final Queue<Task> taskQueue = new LinkedList<>();
     private static Task curTask = null;
-    private static boolean runningTasks = true;
 
     private static List<TaskFactory<?>> taskFactories = new ArrayList<>();
     static {
@@ -72,7 +72,7 @@ public class TaskQueue {
     }
 
     public static int startTasks(CommandContext<FabricClientCommandSource> ctx) {
-        runningTasks = true;
+        Monotone.CONFIG.runningTasks = true;
         ctx.getSource().sendFeedback(Text.literal(String.format("Starting tasks (%s unfinished and %s in queue)", curTask == null ? 0 : 1, taskQueue.size())));
         return 1;
     }
@@ -91,7 +91,7 @@ public class TaskQueue {
 
     @SuppressWarnings("resource")
     public static void stopTasks() {
-        runningTasks = false;
+        Monotone.CONFIG.runningTasks = false;
         InputManager.reset();
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal(String.format("Stopped tasks (%s unfinished and %s in queue)", curTask == null ? 0 : 1, taskQueue.size())));
     }
@@ -120,7 +120,7 @@ public class TaskQueue {
     }
 
     public static void tick(MinecraftClient client) {
-        if (!runningTasks) {
+        if (!Monotone.CONFIG.runningTasks) {
             return;
         }
         if (curTask == null) {

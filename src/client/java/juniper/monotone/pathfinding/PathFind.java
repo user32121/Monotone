@@ -15,6 +15,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
+import juniper.monotone.Monotone;
 import juniper.monotone.pathfinding.steps.DiagonalSprintStep;
 import juniper.monotone.pathfinding.steps.FallStep;
 import juniper.monotone.pathfinding.steps.JumpStep;
@@ -38,10 +39,6 @@ public class PathFind extends Thread {
 
     private static final int HEURISTIC_ESTIMATED_COST = 10;
     private static final List<Step> STEPS = new ArrayList<>();
-    private static int notifyInterval = 5;
-    private static float searchRadius = 2;
-    private static float searchAngle = 60;
-    private static boolean showPath = true;
     static {
         STEPS.add(new SprintStep(new Vec3i(-1, 0, 0)));
         STEPS.add(new SprintStep(new Vec3i(1, 0, 0)));
@@ -91,59 +88,59 @@ public class PathFind extends Thread {
     }
 
     public static int setNotifyInterval(CommandContext<FabricClientCommandSource> ctx) {
-        notifyInterval = IntegerArgumentType.getInteger(ctx, INTERVAL_ARG.getName());
-        ctx.getSource().sendFeedback(Text.literal(String.format("Set pathfinding notify interval to %s seconds", notifyInterval)));
+        Monotone.CONFIG.pathfindNotifyIntervalSeconds = IntegerArgumentType.getInteger(ctx, INTERVAL_ARG.getName());
+        ctx.getSource().sendFeedback(Text.literal(String.format("Set pathfinding notify interval to %s seconds", Monotone.CONFIG.pathfindNotifyIntervalSeconds)));
         return 1;
     }
 
     public static int getNotifyInterval(CommandContext<FabricClientCommandSource> ctx) {
-        ctx.getSource().sendFeedback(Text.literal(String.format("Pathfinding notify interval is set to %s seconds", notifyInterval)));
+        ctx.getSource().sendFeedback(Text.literal(String.format("Pathfinding notify interval is set to %s seconds", Monotone.CONFIG.pathfindNotifyIntervalSeconds)));
         return 1;
     }
 
     public static int setSearchRadius(CommandContext<FabricClientCommandSource> ctx) {
-        searchRadius = FloatArgumentType.getFloat(ctx, RADIUS_ARG.getName());
-        ctx.getSource().sendFeedback(Text.literal(String.format("Set pathfinding maximum search radius to %s chunks", searchRadius)));
+        Monotone.CONFIG.pathfindSearchRadiusChunks = FloatArgumentType.getFloat(ctx, RADIUS_ARG.getName());
+        ctx.getSource().sendFeedback(Text.literal(String.format("Set pathfinding maximum search radius to %s chunks", Monotone.CONFIG.pathfindSearchRadiusChunks)));
         return 1;
     }
 
     public static int getSearchRadius(CommandContext<FabricClientCommandSource> ctx) {
-        ctx.getSource().sendFeedback(Text.literal(String.format("Pathfinding maximum search radius is set to %s chunks", searchRadius)));
+        ctx.getSource().sendFeedback(Text.literal(String.format("Pathfinding maximum search radius is set to %s chunks", Monotone.CONFIG.pathfindSearchRadiusChunks)));
         return 1;
     }
 
     public static float getSearchRadius() {
-        return searchRadius;
+        return Monotone.CONFIG.pathfindSearchRadiusChunks;
     }
 
     public static int setSearchAngle(CommandContext<FabricClientCommandSource> ctx) {
-        searchAngle = FloatArgumentType.getFloat(ctx, ANGLE_ARG.getName());
-        ctx.getSource().sendFeedback(Text.literal(String.format("Set pathfinding search angle to %s degrees", searchAngle)));
+        Monotone.CONFIG.pathfindSearchAngleDegrees = FloatArgumentType.getFloat(ctx, ANGLE_ARG.getName());
+        ctx.getSource().sendFeedback(Text.literal(String.format("Set pathfinding search angle to %s degrees", Monotone.CONFIG.pathfindSearchAngleDegrees)));
         return 1;
     }
 
     public static int getSearchAngle(CommandContext<FabricClientCommandSource> ctx) {
-        ctx.getSource().sendFeedback(Text.literal(String.format("Pathfinding search angle is set to %s degrees", searchAngle)));
+        ctx.getSource().sendFeedback(Text.literal(String.format("Pathfinding search angle is set to %s degrees", Monotone.CONFIG.pathfindSearchAngleDegrees)));
         return 1;
     }
 
     public static float getSearchAngle() {
-        return searchAngle;
+        return Monotone.CONFIG.pathfindSearchAngleDegrees;
     }
 
     public static int setShowPath(CommandContext<FabricClientCommandSource> ctx) {
-        showPath = BoolArgumentType.getBool(ctx, ENABLED_ARG.getName());
-        ctx.getSource().sendFeedback(Text.literal(String.format("Set show path to %s", showPath)));
+        Monotone.CONFIG.pathfindShowPath = BoolArgumentType.getBool(ctx, ENABLED_ARG.getName());
+        ctx.getSource().sendFeedback(Text.literal(String.format("Set show path to %s", Monotone.CONFIG.pathfindShowPath)));
         return 1;
     }
 
     public static int getShowPath(CommandContext<FabricClientCommandSource> ctx) {
-        ctx.getSource().sendFeedback(Text.literal(String.format("Show path is set to %s", showPath)));
+        ctx.getSource().sendFeedback(Text.literal(String.format("Show path is set to %s", Monotone.CONFIG.pathfindShowPath)));
         return 1;
     }
 
     public static boolean getShowPath() {
-        return showPath;
+        return Monotone.CONFIG.pathfindShowPath;
     }
 
     public List<Pair<Vec3i, Tile>> path;
@@ -185,7 +182,7 @@ public class PathFind extends Thread {
             grid.getTile(start).travelFrom = start;
             while (toProcess.size() > 0 && grid.getTile(target).travelFrom == null) {
                 long now = System.currentTimeMillis();
-                if (now - lastNotify >= notifyInterval * 1000) {
+                if (now - lastNotify >= Monotone.CONFIG.pathfindNotifyIntervalSeconds * 1000) {
                     feedback.add(Text.literal(String.format("pathfinding (%s blocks explored) ...", blocksExplored)));
                     lastNotify = now;
                 }
