@@ -3,11 +3,16 @@ package juniper.monotone.config;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import juniper.monotone.Monotone;
+import juniper.monotone.interaction.InteractionType;
+import juniper.monotone.interaction.RegionMask;
 import net.minecraft.client.MinecraftClient;
 
 public class MonotoneConfig {
@@ -17,6 +22,10 @@ public class MonotoneConfig {
     public float pathfindSearchRadiusChunks = 2;
     public float pathfindSearchAngleDegrees = 60;
     public boolean pathfindShowPath = false;
+
+    public Map<InteractionType, Boolean> interactionMaskEnabled = new HashMap<>();
+    //TODO InstanceCreator or TypeAdapter
+    public Map<InteractionType, List<RegionMask>> interactionMask = new HashMap<>();
 
     public static MonotoneConfig load() {
         try (FileReader fr = new FileReader("config/monotone_config.json")) {
