@@ -5,6 +5,7 @@ import java.util.function.Function;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import juniper.monotone.Monotone;
+import juniper.monotone.command.InteractionMask;
 import juniper.monotone.command.RotationPlane;
 import juniper.monotone.command.TaskQueue;
 import juniper.monotone.command.VisibilitySetting;
@@ -34,6 +35,16 @@ public class MonotoneCommand {
                         .then(ClientCommandManager.literal("search_radius").executes(PathFind::getSearchRadius).then(PathFind.RADIUS_ARG.executes(PathFind::setSearchRadius)))
                         .then(ClientCommandManager.literal("search_angle").executes(PathFind::getSearchAngle).then(PathFind.ANGLE_ARG.executes(PathFind::setSearchAngle)))
                         .then(ClientCommandManager.literal("show_path").executes(PathFind::getShowPath).then(PathFind.ENABLED_ARG.executes(PathFind::setShowPath))));
+        makeCommand("mask",
+                node -> node.then(InteractionMask.INTERACTION_ARG
+                        .then(ClientCommandManager.literal("add")
+                                .then(ClientCommandManager.literal("cuboid").then(InteractionMask.FROM_ARG.then(InteractionMask.TO_ARG.executes(InteractionMask::addCuboid))))
+                                .then(ClientCommandManager.literal("schematic")))
+                        .then(ClientCommandManager.literal("remove"))
+                        .then(ClientCommandManager.literal("list"))
+                        .then(ClientCommandManager.literal("display"))
+                        .then(ClientCommandManager.literal("clear"))
+                        .then(ClientCommandManager.literal("enabled"))));
     }
 
     private static void makeCommand(String command, Function<LiteralArgumentBuilder<FabricClientCommandSource>, LiteralArgumentBuilder<FabricClientCommandSource>> buildCommand) {
