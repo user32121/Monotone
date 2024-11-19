@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import juniper.monotone.Monotone;
 import juniper.monotone.interaction.InteractionType;
 import juniper.monotone.interaction.RegionMask;
+import juniper.monotone.interaction.RegionMaskAdapter;
 import net.minecraft.client.MinecraftClient;
 
 public class MonotoneConfig {
@@ -24,12 +25,13 @@ public class MonotoneConfig {
     public boolean pathfindShowPath = false;
 
     public Map<InteractionType, Boolean> interactionMaskEnabled = new HashMap<>();
-    //TODO InstanceCreator or TypeAdapter
     public Map<InteractionType, List<RegionMask>> interactionMask = new HashMap<>();
+
+    public static Gson gson = new GsonBuilder().registerTypeAdapter(RegionMask.class, new RegionMaskAdapter()).setPrettyPrinting().create();
 
     public static MonotoneConfig load() {
         try (FileReader fr = new FileReader("config/monotone_config.json")) {
-            MonotoneConfig mc = new Gson().fromJson(fr, MonotoneConfig.class);
+            MonotoneConfig mc = gson.fromJson(fr, MonotoneConfig.class);
             return mc == null ? new MonotoneConfig() : mc;
         } catch (IOException e) {
             Monotone.LOGGER.warn("unable to load config:", e);
@@ -39,7 +41,7 @@ public class MonotoneConfig {
 
     public static void save(MinecraftClient client) {
         try (FileWriter fw = new FileWriter("config/monotone_config.json")) {
-            new GsonBuilder().setPrettyPrinting().create().toJson(Monotone.CONFIG, fw);
+            gson.toJson(Monotone.CONFIG, fw);
         } catch (IOException e) {
             Monotone.LOGGER.warn("unable to save config:", e);
         }
