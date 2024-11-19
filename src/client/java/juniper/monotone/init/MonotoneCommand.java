@@ -41,7 +41,7 @@ public class MonotoneCommand {
                                 .then(ClientCommandManager.literal("cuboid").then(InteractionMask.FROM_ARG.then(InteractionMask.TO_ARG.executes(InteractionMask::addCuboid))))
                                 .then(ClientCommandManager.literal("schematic")))
                         .then(ClientCommandManager.literal("remove"))
-                        .then(ClientCommandManager.literal("list"))
+                        .then(ClientCommandManager.literal("list").executes(InteractionMask::list))
                         .then(ClientCommandManager.literal("display"))
                         .then(ClientCommandManager.literal("clear"))
                         .then(ClientCommandManager.literal("enabled"))));

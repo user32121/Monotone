@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.nimbusds.oauth2.sdk.util.MapUtils;
 
 import juniper.monotone.interaction.CuboidRegionMask;
 import juniper.monotone.interaction.InteractionArgumentType;
@@ -38,12 +37,23 @@ public class InteractionMask {
         ServerCommandSource scs = new ServerCommandSource(CommandOutput.DUMMY, fccs.getPosition(), fccs.getRotation(), null, 0, "client_command_source_wrapper",
                 Text.literal("Client Command Source Wrapper"), null, fccs.getEntity());
         InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
-        MapUtil.ensureKeySupplier(mask, interaction, ArrayList::new);
+        MapUtil.ensureKey2(mask, interaction, ArrayList::new);
         BlockPos from = ctx.getArgument(FROM_ARG.getName(), PosArgument.class).toAbsoluteBlockPos(scs);
         BlockPos to = ctx.getArgument(TO_ARG.getName(), PosArgument.class).toAbsoluteBlockPos(scs);
         CuboidRegionMask crm = new CuboidRegionMask(from, to);
         mask.get(interaction).add(crm);
-        ctx.getSource().sendFeedback(Text.literal(String.format("Added region %s to %s mask", crm, interaction)));
+        fccs.sendFeedback(Text.literal(String.format("Added region %s to %s mask", crm, interaction)));
         return 1;
+    }
+
+    public static int list(CommandContext<FabricClientCommandSource> ctx) {
+        InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
+        MapUtil.ensureKey2(mask, interaction, ArrayList::new);
+        List<RegionMask> regions = mask.get(interaction);
+        ctx.getSource().sendFeedback(Text.literal(String.format("%s mask regions:", interaction)));
+        for (int i = 0; i < regions.size(); ++i) {
+            ctx.getSource().sendFeedback(Text.literal(String.format("%s: %s", i, regions.get(i))));
+        }
+        return regions.size();
     }
 }
