@@ -85,7 +85,6 @@ public class InteractionMask {
     }
 
     public static int setEnabled(CommandContext<FabricClientCommandSource> ctx) {
-        //TODO actual masking
         InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
         MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
         List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);

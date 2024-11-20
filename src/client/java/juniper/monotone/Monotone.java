@@ -11,6 +11,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 
 public class Monotone implements ClientModInitializer {
     public static final String MODID = "monotone";
@@ -25,5 +26,6 @@ public class Monotone implements ClientModInitializer {
         ClientTickEvents.START_WORLD_TICK.register(TaskQueue::tick);
         ClientLifecycleEvents.CLIENT_STOPPING.register(MonotoneConfig::save);
         AttackBlockCallback.EVENT.register(RegionMask::checkBreakMask);
+        UseBlockCallback.EVENT.register(RegionMask::checkPlaceMask);
     }
 }
