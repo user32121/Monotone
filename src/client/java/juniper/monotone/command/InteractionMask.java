@@ -79,6 +79,7 @@ public class InteractionMask {
         MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
         List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);
         int size = regions.size();
+        regions.clear();
         ctx.getSource().sendFeedback(Text.literal(String.format("Cleared %s regions from %s mask", size, interaction)));
         return size;
     }
@@ -102,7 +103,6 @@ public class InteractionMask {
     }
 
     public static int setDisplay(CommandContext<FabricClientCommandSource> ctx) {
-        //TODO actual rendering
         InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
         MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
         List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);
