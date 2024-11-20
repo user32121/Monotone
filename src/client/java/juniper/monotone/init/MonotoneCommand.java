@@ -39,12 +39,12 @@ public class MonotoneCommand {
                 node -> node.then(InteractionMask.INTERACTION_ARG
                         .then(ClientCommandManager.literal("add")
                                 .then(ClientCommandManager.literal("cuboid").then(InteractionMask.FROM_ARG.then(InteractionMask.TO_ARG.executes(InteractionMask::addCuboid))))
-                                .then(ClientCommandManager.literal("schematic")))
+                                .then(ClientCommandManager.literal("schematic"))) // TODO schematic loading
                         .then(ClientCommandManager.literal("remove").then(InteractionMask.INDEX_ARG.executes(InteractionMask::remove)))
                         .then(ClientCommandManager.literal("list").executes(InteractionMask::list))
-                        .then(ClientCommandManager.literal("display"))
+                        .then(ClientCommandManager.literal("display").executes(InteractionMask::getDisplay).then(InteractionMask.ENABLED_ARG.executes(InteractionMask::setDisplay)))
                         .then(ClientCommandManager.literal("clear").executes(InteractionMask::clear))
-                        .then(ClientCommandManager.literal("enabled").then(InteractionMask.ENABLED_ARG.executes(InteractionMask::enabled)))));
+                        .then(ClientCommandManager.literal("enabled").executes(InteractionMask::getEnabled).then(InteractionMask.ENABLED_ARG.executes(InteractionMask::setEnabled)))));
     }
 
     private static void makeCommand(String command, Function<LiteralArgumentBuilder<FabricClientCommandSource>, LiteralArgumentBuilder<FabricClientCommandSource>> buildCommand) {

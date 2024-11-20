@@ -24,8 +24,9 @@ public class MonotoneConfig {
     public float pathfindSearchAngleDegrees = 60;
     public boolean pathfindShowPath = false;
 
-    public Map<InteractionType, Boolean> interactionMaskEnabled = new HashMap<>();
     public Map<InteractionType, List<RegionMask>> interactionMask = new HashMap<>();
+    public Map<InteractionType, Boolean> interactionMaskEnabled = new HashMap<>();
+    public Map<InteractionType, Boolean> interactionMaskDisplay = new HashMap<>();
 
     public static Gson gson = new GsonBuilder().registerTypeAdapter(RegionMask.class, new RegionMaskAdapter()).setPrettyPrinting().create();
 

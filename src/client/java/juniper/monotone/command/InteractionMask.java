@@ -83,12 +83,39 @@ public class InteractionMask {
         return size;
     }
 
-    public static int enabled(CommandContext<FabricClientCommandSource> ctx) {
+    public static int setEnabled(CommandContext<FabricClientCommandSource> ctx) {
+        //TODO actual masking
         InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
         MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
+        List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);
         boolean b = BoolArgumentType.getBool(ctx, ENABLED_ARG.getName());
         Monotone.CONFIG.interactionMaskEnabled.put(interaction, b);
-        ctx.getSource().sendFeedback(Text.literal(String.format("%s %s mask", b ? "enabled" : "disabled", interaction)));
+        ctx.getSource().sendFeedback(Text.literal(String.format("%s %s mask (%s regions)", b ? "Enabled" : "Disabled", interaction, regions.size())));
+        return 1;
+    }
+
+    public static int getEnabled(CommandContext<FabricClientCommandSource> ctx) {
+        InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
+        boolean b = Monotone.CONFIG.interactionMaskDisplay.getOrDefault(interaction, false);
+        ctx.getSource().sendFeedback(Text.literal(String.format("%s mask is %s", interaction, b ? "enabled" : "disabled")));
+        return 1;
+    }
+
+    public static int setDisplay(CommandContext<FabricClientCommandSource> ctx) {
+        //TODO actual rendering
+        InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
+        MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
+        List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);
+        boolean b = BoolArgumentType.getBool(ctx, ENABLED_ARG.getName());
+        Monotone.CONFIG.interactionMaskDisplay.put(interaction, b);
+        ctx.getSource().sendFeedback(Text.literal(String.format("%s displaying %s mask (%s regions)", b ? "Enabled" : "Disabled", interaction, regions.size())));
+        return 1;
+    }
+
+    public static int getDisplay(CommandContext<FabricClientCommandSource> ctx) {
+        InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
+        boolean b = Monotone.CONFIG.interactionMaskDisplay.getOrDefault(interaction, false);
+        ctx.getSource().sendFeedback(Text.literal(String.format("Displaying %s mask is %s", interaction, b ? "enabled" : "disabled")));
         return 1;
     }
 }
