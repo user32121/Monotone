@@ -6,9 +6,11 @@ import org.slf4j.LoggerFactory;
 import juniper.monotone.command.TaskQueue;
 import juniper.monotone.config.MonotoneConfig;
 import juniper.monotone.init.MonotoneCommand;
+import juniper.monotone.interaction.RegionMask;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 
 public class Monotone implements ClientModInitializer {
     public static final String MODID = "monotone";
@@ -22,5 +24,6 @@ public class Monotone implements ClientModInitializer {
         MonotoneCommand.init();
         ClientTickEvents.START_WORLD_TICK.register(TaskQueue::tick);
         ClientLifecycleEvents.CLIENT_STOPPING.register(MonotoneConfig::save);
+        AttackBlockCallback.EVENT.register(RegionMask::checkBreakMask);
     }
 }
