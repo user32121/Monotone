@@ -5,21 +5,24 @@ import java.util.List;
 
 import juniper.monotone.Monotone;
 import juniper.monotone.util.MapUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public interface RegionMask {
+public interface RegionMask extends Iterable<Pair<BlockPos, BlockState>> {
     public boolean contains(BlockPos pos);
 
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d cameraPos, Vec3d color);
+
 
     public static ActionResult checkBreakMask(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
         return checkMask(pos, InteractionType.BREAK);
