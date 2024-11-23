@@ -1,11 +1,9 @@
 package juniper.monotone.render;
 
 import juniper.monotone.Monotone;
-import juniper.monotone.interaction.CuboidRegionMask;
 import juniper.monotone.interaction.InteractionType;
 import juniper.monotone.interaction.RegionMask;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.render.debug.DebugRenderer.Renderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
@@ -23,10 +21,9 @@ public class InteractionMaskDebugRenderer implements Renderer {
                 col = Vec3d.ZERO;
             }
             for (RegionMask rm : Monotone.CONFIG.interactionMask.get(it)) {
-                if (rm instanceof CuboidRegionMask crm) {
-                    DebugRenderer.drawBox(matrices, vertexConsumers, crm.from, crm.to, (float) col.x, (float) col.y, (float) col.z, 0.5f);
-                }
+                rm.render(matrices, vertexConsumers, new Vec3d(cameraX, cameraY, cameraZ), col);
             }
+            // TODO highlight blocks in mask
         }
     }
 }
