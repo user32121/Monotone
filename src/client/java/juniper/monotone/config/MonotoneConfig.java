@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 
 import juniper.monotone.Monotone;
 import juniper.monotone.interaction.InteractionType;
+import juniper.monotone.interaction.MaskDisplayType;
 import juniper.monotone.interaction.RegionMask;
 import juniper.monotone.interaction.RegionMaskAdapter;
 import net.minecraft.client.MinecraftClient;
@@ -26,7 +27,7 @@ public class MonotoneConfig {
 
     public Map<InteractionType, List<RegionMask>> interactionMask = new HashMap<>();
     public Map<InteractionType, Boolean> interactionMaskEnabled = new HashMap<>();
-    public Map<InteractionType, Boolean> interactionMaskDisplay = new HashMap<>();
+    public Map<InteractionType, MaskDisplayType> interactionMaskDisplay = new HashMap<>();
 
     public static Gson gson = new GsonBuilder().registerTypeAdapter(RegionMask.class, new RegionMaskAdapter()).setPrettyPrinting().create();
 

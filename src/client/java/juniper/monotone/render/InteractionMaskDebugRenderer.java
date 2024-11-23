@@ -4,6 +4,7 @@ import java.util.function.Predicate;
 
 import juniper.monotone.Monotone;
 import juniper.monotone.interaction.InteractionType;
+import juniper.monotone.interaction.MaskDisplayType;
 import juniper.monotone.interaction.RegionMask;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -24,6 +25,7 @@ public class InteractionMaskDebugRenderer implements Renderer {
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
         for (InteractionType it : Monotone.CONFIG.interactionMask.keySet()) {
+            MaskDisplayType mdt = Monotone.CONFIG.interactionMaskDisplay.get(it);
             Vec3d col;
             Predicate<Pair<BlockPos, BlockState>> blockRenderPredicate;
             if (it.equals(InteractionType.BREAK)) {
@@ -39,12 +41,15 @@ public class InteractionMaskDebugRenderer implements Renderer {
                 continue;
             }
             for (RegionMask rm : Monotone.CONFIG.interactionMask.get(it)) {
-                rm.render(matrices, vertexConsumers, new Vec3d(cameraX, cameraY, cameraZ), col);
-                for (Pair<BlockPos, BlockState> pair : rm) {
-                    if (blockRenderPredicate.test(pair)) {
-                        DebugRenderer.drawBox(matrices, vertexConsumers,
-                                new Box(pair.getLeft()).offset(-cameraX, -cameraY, -cameraZ), (float) col.x,
-                                (float) col.y, (float) col.z, 0.5f);
+                if (mdt.equals(MaskDisplayType.ALL)) {
+                    rm.render(matrices, vertexConsumers, new Vec3d(cameraX, cameraY, cameraZ), col);
+                } else if (mdt.equals(MaskDisplayType.UNMATCHING)) {
+                  for (Pair<BlockPos, BlockState> pair : rm) {
+                      if (blockRenderPredicate.test(pair)) {
+                          DebugRenderer.drawBox(matrices, vertexConsumers,
+                                  new Box(pair.getLeft()).offset(-cameraX, -cameraY, -cameraZ), (float) col.x,
+                                  (float) col.y, (float) col.z, 0.5f);
+                        }
                     }
                 }
             }

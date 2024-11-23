@@ -42,7 +42,10 @@ public class MonotoneCommand {
                                 .then(ClientCommandManager.literal("schematic"))) // TODO schematic loading
                         .then(ClientCommandManager.literal("remove").then(InteractionMask.INDEX_ARG.executes(InteractionMask::remove)))
                         .then(ClientCommandManager.literal("list").executes(InteractionMask::list))
-                        .then(ClientCommandManager.literal("display").executes(InteractionMask::getDisplay).then(InteractionMask.ENABLED_ARG.executes(InteractionMask::setDisplay)))
+                                        .then(ClientCommandManager.literal("display")
+                                                        .executes(InteractionMask::getDisplay)
+                                                        .then(InteractionMask.DISPLAY_ARG
+                                                                        .executes(InteractionMask::setDisplay)))
                         .then(ClientCommandManager.literal("clear").executes(InteractionMask::clear))
                         .then(ClientCommandManager.literal("enabled").executes(InteractionMask::getEnabled).then(InteractionMask.ENABLED_ARG.executes(InteractionMask::setEnabled)))));
     }
