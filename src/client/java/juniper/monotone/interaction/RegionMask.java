@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 public interface RegionMask extends Iterable<Pair<BlockPos, BlockState>> {
     public boolean contains(BlockPos pos);
 
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d cameraPos, Vec3d color);
+    public void renderBounds(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d cameraPos, Vec3d color);
 
 
     public static ActionResult checkBreakMask(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {

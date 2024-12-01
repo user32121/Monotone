@@ -22,6 +22,7 @@ import juniper.monotone.interaction.RegionMask;
 import juniper.monotone.interaction.RegionMaskAdapter;
 import net.minecraft.client.MinecraftClient;
 
+//TODO config broken again
 public class MonotoneConfig {
     public boolean runningTasks = false;
 

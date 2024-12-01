@@ -10,7 +10,8 @@
     "BrightnessMixin",
     "DebugRendererMixin",
     "KeyInputMixin",
-    "MouseInputAccessor"
+    "MouseInputAccessor",
+    "StructureTemplateAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

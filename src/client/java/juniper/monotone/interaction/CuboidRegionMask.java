@@ -32,7 +32,7 @@ public class CuboidRegionMask implements RegionMask {
     }
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d cameraPos, Vec3d color) {
+    public void renderBounds(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d cameraPos, Vec3d color) {
         DebugRenderer.drawBox(matrices, vertexConsumers, from, to, (float) color.x, (float) color.y,
                 (float) color.z, 0.5f);
     }

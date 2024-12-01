@@ -39,7 +39,7 @@ public class MonotoneCommand {
                 node -> node.then(InteractionMask.INTERACTION_ARG
                         .then(ClientCommandManager.literal("add")
                                 .then(ClientCommandManager.literal("cuboid").then(InteractionMask.FROM_ARG.then(InteractionMask.TO_ARG.executes(InteractionMask::addCuboid))))
-                                .then(ClientCommandManager.literal("schematic").then(InteractionMask.PATH_ARG.executes(InteractionMask::addSchematic))))
+                                .then(ClientCommandManager.literal("schematic").then(InteractionMask.PATH_ARG.then(InteractionMask.BASE_ARG.executes(InteractionMask::addSchematic)))))
                         .then(ClientCommandManager.literal("remove").then(InteractionMask.INDEX_ARG.executes(InteractionMask::remove)))
                         .then(ClientCommandManager.literal("list").executes(InteractionMask::list))
                                         .then(ClientCommandManager.literal("display")

@@ -43,6 +43,8 @@ public class InteractionMask {
             .argument("enabled", new MaskDisplayArgumentType());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, String> PATH_ARG = ClientCommandManager
             .argument("path", StringArgumentType.string());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> BASE_ARG = ClientCommandManager
+            .argument("base", new BlockPosArgumentType());
 
     public static int addCuboid(CommandContext<FabricClientCommandSource> ctx) {
         FabricClientCommandSource fccs = ctx.getSource();
@@ -59,19 +61,23 @@ public class InteractionMask {
     }
 
     public static int addSchematic(CommandContext<FabricClientCommandSource> ctx) {
+        FabricClientCommandSource fccs = ctx.getSource();
+        ServerCommandSource scs = new ServerCommandSource(CommandOutput.DUMMY, fccs.getPosition(), fccs.getRotation(), null, 0, "client_command_source_wrapper",
+                Text.literal("Client Command Source Wrapper"), null, fccs.getEntity());
         InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
         MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
         String path = StringArgumentType.getString(ctx, PATH_ARG.getName());
+        BlockPos base = ctx.getArgument(BASE_ARG.getName(), PosArgument.class).toAbsoluteBlockPos(scs);
         SchematicRegionMask srm = null;
         try {
-            srm = new SchematicRegionMask(path);
+            srm = new SchematicRegionMask(path, base);
         } catch (IOException e) {
             e.printStackTrace();
             ctx.getSource().sendFeedback(Text.literal(String.format("Unable to create schematic mask: %s", e)));
             return -1;
         }
         Monotone.CONFIG.interactionMask.get(interaction).add(srm);
-        ctx.getSource().sendFeedback(Text.literal(String.format("Added schematic %s to %s mask", srm, interaction)));
+        fccs.sendFeedback(Text.literal(String.format("Added schematic %s to %s mask", srm, interaction)));
         return 1;
     }
 
@@ -133,8 +139,8 @@ public class InteractionMask {
         List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);
         MaskDisplayType display = ctx.getArgument(DISPLAY_ARG.getName(), MaskDisplayType.class);
         Monotone.CONFIG.interactionMaskDisplay.put(interaction, display);
-        ctx.getSource().sendFeedback(Text.literal(String.format("%s displaying %s mask (%s regions)",
-                display, interaction, regions.size())));
+        ctx.getSource().sendFeedback(Text.literal(String.format("Set %s mask display to %s (%s regions)",
+                interaction, display, regions.size())));
         return 1;
     }
 

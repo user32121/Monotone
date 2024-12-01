@@ -5,7 +5,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.util.StringIdentifiable;
 
 public enum MaskDisplayType implements StringIdentifiable {
-    NONE("none"), UNMATCHING("unmatching"), ALL("all");
+    NONE("none"), UNMATCHING("unmatching"), BOUNDS("bounds");
 
     public static final Codec<MaskDisplayType> CODEC;
     static {
