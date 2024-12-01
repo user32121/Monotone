@@ -1,10 +1,12 @@
 package juniper.monotone.command;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
@@ -15,6 +17,7 @@ import juniper.monotone.interaction.InteractionType;
 import juniper.monotone.interaction.MaskDisplayArgumentType;
 import juniper.monotone.interaction.MaskDisplayType;
 import juniper.monotone.interaction.RegionMask;
+import juniper.monotone.interaction.SchematicRegionMask;
 import juniper.monotone.util.MapUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -38,6 +41,8 @@ public class InteractionMask {
             .argument("enabled", BoolArgumentType.bool());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, MaskDisplayType> DISPLAY_ARG = ClientCommandManager
             .argument("enabled", new MaskDisplayArgumentType());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, String> PATH_ARG = ClientCommandManager
+            .argument("path", StringArgumentType.string());
 
     public static int addCuboid(CommandContext<FabricClientCommandSource> ctx) {
         FabricClientCommandSource fccs = ctx.getSource();
@@ -50,6 +55,23 @@ public class InteractionMask {
         CuboidRegionMask crm = new CuboidRegionMask(from, to);
         Monotone.CONFIG.interactionMask.get(interaction).add(crm);
         fccs.sendFeedback(Text.literal(String.format("Added region %s to %s mask", crm, interaction)));
+        return 1;
+    }
+
+    public static int addSchematic(CommandContext<FabricClientCommandSource> ctx) {
+        InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
+        MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
+        String path = StringArgumentType.getString(ctx, PATH_ARG.getName());
+        SchematicRegionMask srm = null;
+        try {
+            srm = new SchematicRegionMask(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            ctx.getSource().sendFeedback(Text.literal(String.format("Unable to create schematic mask: %s", e)));
+            return -1;
+        }
+        Monotone.CONFIG.interactionMask.get(interaction).add(srm);
+        ctx.getSource().sendFeedback(Text.literal(String.format("Added schematic %s to %s mask", srm, interaction)));
         return 1;
     }
 
