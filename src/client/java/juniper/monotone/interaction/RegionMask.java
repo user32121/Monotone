@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import juniper.monotone.Monotone;
+import juniper.monotone.mixinInterface.ReadOnlyWorldInterface;
 import juniper.monotone.util.MapUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
@@ -36,7 +39,22 @@ public interface RegionMask extends Iterable<Pair<BlockPos, BlockState>> {
     }
 
     public static ActionResult checkPlaceMask(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
-        return checkMask(hitResult.getBlockPos().offset(hitResult.getSide()), InteractionType.PLACE, null);
+        ItemStack stack = player.getStackInHand(hand);
+        ItemUsageContext iuc = new ItemUsageContext(world, player, hand, stack, hitResult);
+        ReadOnlyWorldInterface rowi = (ReadOnlyWorldInterface) world;
+        rowi.enable();
+        stack.useOnBlock(iuc);
+        rowi.disable();
+        List<Pair<BlockPos, BlockState>> changes = rowi.getBlockChanges();
+        for (Pair<BlockPos, BlockState> change : changes) {
+            ActionResult ar = checkMask(change.getLeft(), InteractionType.PLACE, change.getRight());
+            if (!ar.equals(ActionResult.PASS)) {
+                rowi.clearBlockChanges();
+                return ar;
+            }
+        }
+        rowi.clearBlockChanges();
+        return ActionResult.PASS;
     }
 
     public static ActionResult checkMask(BlockPos pos, InteractionType type, BlockState state) {

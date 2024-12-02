@@ -11,7 +11,8 @@
     "DebugRendererMixin",
     "KeyInputMixin",
     "MouseInputAccessor",
-    "StructureTemplateAccessor"
+    "StructureTemplateAccessor",
+    "ReadOnlyWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

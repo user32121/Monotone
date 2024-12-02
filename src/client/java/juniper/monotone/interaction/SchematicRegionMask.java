@@ -43,7 +43,7 @@ public class SchematicRegionMask implements RegionMask {
     @Override
     public boolean contains(BlockPos pos, BlockState state) {
         for (StructureBlockInfo sbi : sbis) {
-            if (sbi.pos().add(base).equals(pos)) {
+            if (sbi.pos().add(base).equals(pos) && (state == null || sbi.state().equals(state))) {
                 return true;
             }
         }
