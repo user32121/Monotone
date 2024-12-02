@@ -42,7 +42,9 @@ public class InteractionMaskDebugRenderer implements Renderer {
             }
             for (RegionMask rm : Monotone.CONFIG.interactionMask.get(it)) {
                 if (mdt.equals(MaskDisplayType.BOUNDS)) {
-                    rm.renderBounds(matrices, vertexConsumers, new Vec3d(cameraX, cameraY, cameraZ), col);
+                    Pair<BlockPos, BlockPos> bounds = rm.getBounds();
+                    DebugRenderer.drawBox(matrices, vertexConsumers, bounds.getLeft(), bounds.getRight(),
+                            (float) col.x, (float) col.y, (float) col.z, 0.5f);
                 } else if (mdt.equals(MaskDisplayType.UNMATCHING)) {
                     for (Pair<BlockPos, BlockState> pair : rm) {
                         if (blockRenderPredicate.test(pair)) {

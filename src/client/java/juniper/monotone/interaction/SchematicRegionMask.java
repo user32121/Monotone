@@ -55,10 +55,8 @@ public class SchematicRegionMask implements RegionMask {
     }
 
     @Override
-    public void renderBounds(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d cameraPos, Vec3d color) {
-        //TODO return box and let caller call drawBox
-        DebugRenderer.drawBox(matrices, vertexConsumers, from, to, (float) color.x, (float) color.y,
-                (float) color.z, 0.5f);
+    public Pair<BlockPos, BlockPos> getBounds() {
+        return new Pair<>(from, to);
     }
 
     @Override

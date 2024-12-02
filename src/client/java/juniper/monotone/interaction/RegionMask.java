@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 public interface RegionMask extends Iterable<Pair<BlockPos, BlockState>> {
     public boolean contains(BlockPos pos);
 
-    public void renderBounds(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d cameraPos, Vec3d color);
+    public Pair<BlockPos, BlockPos> getBounds();
 
     /**
      * Called when deserializing to ensure nonserialized fields are initialized
