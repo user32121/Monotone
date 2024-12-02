@@ -25,7 +25,7 @@ public class InteractionMaskDebugRenderer implements Renderer {
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
         for (InteractionType it : Monotone.CONFIG.interactionMask.keySet()) {
-            MaskDisplayType mdt = Monotone.CONFIG.interactionMaskDisplay.getOrDefault(it, MaskDisplayType.NONE);
+            MaskDisplayType mdt = Monotone.CONFIG.interactionMaskDisplay.getOrDefault(it, MaskDisplayType.UNMATCHING);
             Vec3d col;
             Predicate<Pair<BlockPos, BlockState>> blockRenderPredicate;
             if (it.equals(InteractionType.BREAK)) {

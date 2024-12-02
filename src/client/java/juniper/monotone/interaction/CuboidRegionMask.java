@@ -1,5 +1,6 @@
 package juniper.monotone.interaction;
 
+import java.io.IOException;
 import java.util.Iterator;
 
 import com.google.common.collect.Iterators;
@@ -19,6 +20,7 @@ public class CuboidRegionMask implements RegionMask {
     public CuboidRegionMask(BlockPos from, BlockPos to) {
         this.from = from;
         this.to = to;
+        init();
     }
 
     @Override
@@ -40,5 +42,9 @@ public class CuboidRegionMask implements RegionMask {
     @Override
     public Iterator<Pair<BlockPos, BlockState>> iterator() {
         return Iterators.transform(BlockPos.iterate(from, to).iterator(), bp -> new Pair<>(bp, null));
+    }
+
+    @Override
+    public void init() {
     }
 }

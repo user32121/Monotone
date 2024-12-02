@@ -37,6 +37,7 @@ public class RegionMaskAdapter extends TypeAdapter<RegionMask> {
                 }
             } else if (name.equals("data")) {
                 ret = gson.fromJson(in, clazz);
+                ret.init();
             } else {
                 in.skipValue();
             }

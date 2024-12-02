@@ -1,5 +1,6 @@
 package juniper.monotone.interaction;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,10 @@ public interface RegionMask extends Iterable<Pair<BlockPos, BlockState>> {
 
     public void renderBounds(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d cameraPos, Vec3d color);
 
+    /**
+     * Called when deserializing to ensure nonserialized fields are initialized
+     */
+    public void init() throws IOException;
 
     public static ActionResult checkBreakMask(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
         return checkMask(pos, InteractionType.BREAK);

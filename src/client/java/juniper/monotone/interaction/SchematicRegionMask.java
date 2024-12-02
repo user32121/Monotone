@@ -27,22 +27,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class SchematicRegionMask implements RegionMask {
-    public final List<StructureBlockInfo> sbis;
-    public final BlockPos base, from, to;
+    public final String path;
+    public final BlockPos base;
+    public transient List<StructureBlockInfo> sbis;
+    public transient BlockPos from, to;
 
     public SchematicRegionMask(String path, BlockPos basePos) throws IOException {
-        StructureTemplate st = new StructureTemplate();
-        Path path2 = Paths.get("schematics", path);
-        NbtCompound nbt = NbtIo.readCompressed(path2, NbtSizeTracker.ofUnlimitedBytes());
-        if (nbt == null) {
-            throw new FileNotFoundException(String.format("Could not read file at %s", path2));
-        }
-        st.readNbt(Registries.BLOCK, nbt);
-        sbis = ((StructureTemplateAccessor) (Object) st).getBlockInfoLists().get(0).getAll();
+        this.path = path;
         this.base = basePos;
-        BlockBox bb = st.calculateBoundingBox(new StructurePlacementData(), basePos);
-        from = new BlockPos(bb.getMinX(), bb.getMinY(), bb.getMinZ());
-        to = new BlockPos(bb.getMaxX(), bb.getMaxY(), bb.getMaxZ());
+        init();
     }
 
     @Override
@@ -68,4 +61,18 @@ public class SchematicRegionMask implements RegionMask {
                 (float) color.z, 0.5f);
     }
 
+    @Override
+    public void init() throws IOException {
+        StructureTemplate st = new StructureTemplate();
+        Path path2 = Paths.get("schematics", path);
+        NbtCompound nbt = NbtIo.readCompressed(path2, NbtSizeTracker.ofUnlimitedBytes());
+        if (nbt == null) {
+            throw new FileNotFoundException(String.format("Could not read file at %s", path2));
+        }
+        st.readNbt(Registries.BLOCK, nbt);
+        sbis = ((StructureTemplateAccessor) (Object) st).getBlockInfoLists().get(0).getAll();
+        BlockBox bb = st.calculateBoundingBox(new StructurePlacementData(), base);
+        from = new BlockPos(bb.getMinX(), bb.getMinY(), bb.getMinZ());
+        to = new BlockPos(bb.getMaxX(), bb.getMaxY(), bb.getMaxZ());
+    }
 }
