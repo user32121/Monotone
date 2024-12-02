@@ -11,9 +11,6 @@ import com.google.common.collect.Iterators;
 
 import juniper.monotone.mixin.StructureTemplateAccessor;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.debug.DebugRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtSizeTracker;
@@ -24,9 +21,9 @@ import net.minecraft.structure.StructureTemplate.StructureBlockInfo;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 public class SchematicRegionMask implements RegionMask {
+    //TODO schematic transforms
     public final String path;
     public final BlockPos base;
     public transient List<StructureBlockInfo> sbis;
@@ -44,10 +41,9 @@ public class SchematicRegionMask implements RegionMask {
     }
 
     @Override
-    public boolean contains(BlockPos pos) {
-        //TODO failing to allow placement
+    public boolean contains(BlockPos pos, BlockState state) {
         for (StructureBlockInfo sbi : sbis) {
-            if (pos.equals(sbi.pos())) {
+            if (sbi.pos().add(base).equals(pos)) {
                 return true;
             }
         }
