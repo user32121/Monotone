@@ -24,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class SchematicRegionMask implements RegionMask {
     //TODO schematic transforms
+    //TODO tostring
     public final String path;
     public final BlockPos base;
     public transient List<StructureBlockInfo> sbis;

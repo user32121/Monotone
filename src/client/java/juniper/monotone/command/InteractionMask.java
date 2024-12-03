@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -37,8 +36,6 @@ public class InteractionMask {
             .argument("to", new BlockPosArgumentType());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, Integer> INDEX_ARG = ClientCommandManager
             .argument("index", IntegerArgumentType.integer(0));
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, Boolean> ENABLED_ARG = ClientCommandManager
-            .argument("enabled", BoolArgumentType.bool());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, MaskDisplayType> DISPLAY_ARG = ClientCommandManager
             .argument("enabled", new MaskDisplayArgumentType());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, String> PATH_ARG = ClientCommandManager
@@ -85,7 +82,8 @@ public class InteractionMask {
         InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
         MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
         List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);
-        ctx.getSource().sendFeedback(Text.literal(String.format("%s mask regions:", interaction)));
+        boolean b = Monotone.CONFIG.interactionMaskEnabled.getOrDefault(interaction, false);
+        ctx.getSource().sendFeedback(Text.literal(String.format("%s mask is %s with regions:", interaction, b ? "enabled" : "disabled")));
         for (int i = 0; i < regions.size(); ++i) {
             ctx.getSource().sendFeedback(Text.literal(String.format("%s: %s", i, regions.get(i))));
         }
@@ -116,20 +114,21 @@ public class InteractionMask {
         return size;
     }
 
-    public static int setEnabled(CommandContext<FabricClientCommandSource> ctx) {
+    public static int enable(CommandContext<FabricClientCommandSource> ctx) {
         InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
         MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
         List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);
-        boolean b = BoolArgumentType.getBool(ctx, ENABLED_ARG.getName());
-        Monotone.CONFIG.interactionMaskEnabled.put(interaction, b);
-        ctx.getSource().sendFeedback(Text.literal(String.format("%s %s mask (%s regions)", b ? "Enabled" : "Disabled", interaction, regions.size())));
+        Monotone.CONFIG.interactionMaskEnabled.put(interaction, true);
+        ctx.getSource().sendFeedback(Text.literal(String.format("Enabled %s mask (%s regions)", interaction, regions.size())));
         return 1;
     }
 
-    public static int getEnabled(CommandContext<FabricClientCommandSource> ctx) {
+    public static int disable(CommandContext<FabricClientCommandSource> ctx) {
         InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
-        boolean b = Monotone.CONFIG.interactionMaskEnabled.getOrDefault(interaction, false);
-        ctx.getSource().sendFeedback(Text.literal(String.format("%s mask is %s", interaction, b ? "enabled" : "disabled")));
+        MapUtil.ensureKey2(Monotone.CONFIG.interactionMask, interaction, ArrayList::new);
+        List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);
+        Monotone.CONFIG.interactionMaskEnabled.put(interaction, false);
+        ctx.getSource().sendFeedback(Text.literal(String.format("Disabled %s mask (%s regions)", interaction, regions.size())));
         return 1;
     }
 

@@ -47,8 +47,7 @@ public class MonotoneCommand {
                                                         .then(InteractionMask.DISPLAY_ARG
                                                                         .executes(InteractionMask::setDisplay)))
                         .then(ClientCommandManager.literal("clear").executes(InteractionMask::clear))
-                        .then(ClientCommandManager.literal("enabled").executes(InteractionMask::getEnabled).then(InteractionMask.ENABLED_ARG.executes(InteractionMask::setEnabled)))));
-        //TODO replace enabled <bool> with enable/disable
+                        .then(ClientCommandManager.literal("enable").executes(InteractionMask::enable)).then(ClientCommandManager.literal("disable").executes(InteractionMask::disable))));
     }
 
     private static void makeCommand(String command, Function<LiteralArgumentBuilder<FabricClientCommandSource>, LiteralArgumentBuilder<FabricClientCommandSource>> buildCommand) {
