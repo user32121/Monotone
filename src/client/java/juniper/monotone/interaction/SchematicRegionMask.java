@@ -24,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 
 public class SchematicRegionMask implements RegionMask {
     //TODO schematic transforms
-    //TODO tostring
     public final String path;
     public final BlockPos base;
     public transient List<StructureBlockInfo> sbis;
@@ -69,5 +68,10 @@ public class SchematicRegionMask implements RegionMask {
         BlockBox bb = st.calculateBoundingBox(new StructurePlacementData(), base);
         from = new BlockPos(bb.getMinX(), bb.getMinY(), bb.getMinZ());
         to = new BlockPos(bb.getMaxX(), bb.getMaxY(), bb.getMaxZ());
+    }
+
+    @Override
+    public String toString() {
+        return "SchematicRegionMask [path=" + path + ", base=" + base + "]";
     }
 }
