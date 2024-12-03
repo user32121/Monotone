@@ -15,6 +15,7 @@ import juniper.monotone.interaction.InteractionArgumentType;
 import juniper.monotone.interaction.InteractionType;
 import juniper.monotone.interaction.MaskDisplayArgumentType;
 import juniper.monotone.interaction.MaskDisplayType;
+import juniper.monotone.interaction.PathArgumentType;
 import juniper.monotone.interaction.RegionMask;
 import juniper.monotone.interaction.SchematicRegionMask;
 import juniper.monotone.util.MapUtil;
@@ -39,7 +40,7 @@ public class InteractionMask {
     public static final RequiredArgumentBuilder<FabricClientCommandSource, MaskDisplayType> DISPLAY_ARG = ClientCommandManager
             .argument("enabled", new MaskDisplayArgumentType());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, String> PATH_ARG = ClientCommandManager
-            .argument("path", StringArgumentType.string());
+            .argument("path", new PathArgumentType());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> BASE_ARG = ClientCommandManager
             .argument("base", new BlockPosArgumentType());
 
