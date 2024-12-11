@@ -2,3 +2,5 @@ more convincing mouse movement
 FallStep can get stuck
 avoid water in normal steps
 SwimStep
+prevent all packets related to masked actions from sending
+prevent item decrement on masked action
