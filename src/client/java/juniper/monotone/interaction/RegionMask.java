@@ -39,6 +39,9 @@ public interface RegionMask extends Iterable<Pair<BlockPos, BlockState>> {
     }
 
     public static ActionResult checkPlaceMask(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
+        if (!world.isClient()) {
+            return ActionResult.PASS;
+        }
         //return early to avoid extraneous world processing
         if (!Monotone.CONFIG.interactionMaskEnabled.getOrDefault(InteractionType.PLACE, false)) {
             return ActionResult.PASS;
