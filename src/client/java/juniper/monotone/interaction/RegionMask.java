@@ -43,7 +43,7 @@ public interface RegionMask extends Iterable<Pair<BlockPos, BlockState>> {
         if (!Monotone.CONFIG.interactionMaskEnabled.getOrDefault(InteractionType.PLACE, false)) {
             return ActionResult.PASS;
         }
-        ItemStack stack = player.getStackInHand(hand);
+        ItemStack stack = player.getStackInHand(hand).copy();
         ItemUsageContext iuc = new ItemUsageContext(world, player, hand, stack, hitResult);
         ReadOnlyWorldInterface rowi = (ReadOnlyWorldInterface) world;
         rowi.enable();
