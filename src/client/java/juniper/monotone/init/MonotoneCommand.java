@@ -17,7 +17,8 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 public class MonotoneCommand {
     public static void init() {
         makeCommand("visibility", node -> node
-                .then(VisibilitySetting.SETTING_ARG.executes(VisibilitySetting::getHighlight).then(VisibilitySetting.VALUE_ARG.executes(VisibilitySetting::setHighlight))));
+                .then(VisibilitySetting.SETTING_ARG.executes(VisibilitySetting::getHighlight).then(VisibilitySetting.VALUE_ARG.executes(VisibilitySetting::setHighlight)))
+                .then(VisibilitySetting.ENTITY_TYPE_ARG.executes(VisibilitySetting::getHighlightEntity).then(VisibilitySetting.VALUE_ARG.executes(VisibilitySetting::setHighlightEntity))));
         makeCommand("limit",
                 node -> node.then(RotationPlane.PLANE_ARG.executes(RotationPlane::getLimit).then(ClientCommandManager.literal("clear").executes(RotationPlane::clearLimit))
                         .then(RotationPlane.MIN_ARG

@@ -18,6 +18,12 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandSource;
+import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
+import net.minecraft.entity.EntityType;
+import net.minecraft.registry.BuiltinRegistries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
 
 public enum VisibilitySetting {
@@ -43,8 +49,11 @@ public enum VisibilitySetting {
     }
 
     public static final Map<VisibilitySetting, Boolean> HIGHLIGHT = new HashMap<>();
+    public static final Map<EntityType<?>, Boolean> HIGHLIGHT_ENTITY = new HashMap<>();
     public static final RequiredArgumentBuilder<FabricClientCommandSource, VisibilitySetting> SETTING_ARG = ClientCommandManager.argument("setting", new HighlightTargetArgument());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, Boolean> VALUE_ARG = ClientCommandManager.argument("value", BoolArgumentType.bool());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, ?> ENTITY_TYPE_ARG = ClientCommandManager.argument("entity_type",
+            RegistryEntryReferenceArgumentType.registryEntry(CommandManager.createRegistryAccess(BuiltinRegistries.createWrapperLookup()), RegistryKeys.ENTITY_TYPE));
 
     public static int getHighlight(CommandContext<FabricClientCommandSource> ctx) {
         VisibilitySetting target = ctx.getArgument(SETTING_ARG.getName(), VisibilitySetting.class);
@@ -58,6 +67,25 @@ public enum VisibilitySetting {
         boolean b = BoolArgumentType.getBool(ctx, VALUE_ARG.getName());
         HIGHLIGHT.put(target, b);
         ctx.getSource().sendFeedback(Text.literal(String.format("Highlight for %s set to %s", target, b)));
+        return 1;
+    }
+
+    public static int getHighlightEntity(CommandContext<FabricClientCommandSource> ctx) {
+        @SuppressWarnings("unchecked")
+        RegistryEntry.Reference<EntityType<?>> reference = ctx.getArgument(ENTITY_TYPE_ARG.getName(), RegistryEntry.Reference.class);
+        EntityType<?> et = reference.value();
+        boolean b = HIGHLIGHT_ENTITY.getOrDefault(et, false);
+        ctx.getSource().sendFeedback(Text.literal(String.format("Highlight for %s is %s", et, b)));
+        return 1;
+    }
+
+    public static int setHighlightEntity(CommandContext<FabricClientCommandSource> ctx) {
+        @SuppressWarnings("unchecked")
+        RegistryEntry.Reference<EntityType<?>> reference = ctx.getArgument(ENTITY_TYPE_ARG.getName(), RegistryEntry.Reference.class);
+        EntityType<?> et = reference.value();
+        boolean b = BoolArgumentType.getBool(ctx, VALUE_ARG.getName());
+        HIGHLIGHT_ENTITY.put(et, b);
+        ctx.getSource().sendFeedback(Text.literal(String.format("Highlight for %s set to %s", et, b)));
         return 1;
     }
 }
