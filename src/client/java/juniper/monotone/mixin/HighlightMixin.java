@@ -19,5 +19,8 @@ public abstract class HighlightMixin {
                 && entity.getWorld().getTime() - aea.getLastFed() >= AnimalEntityAccessor.getBREEDING_COOLDOWN()) {
             info.setReturnValue(true);
         }
+        if (VisibilitySetting.HIGHLIGHT_ENTITY.getOrDefault(entity.getType(), false)) {
+            info.setReturnValue(true);
+        }
     }
 }
