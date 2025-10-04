@@ -16,11 +16,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import juniper.monotone.Monotone;
+import juniper.monotone.command.LocatorMode;
 import juniper.monotone.interaction.InteractionType;
 import juniper.monotone.interaction.MaskDisplayType;
 import juniper.monotone.interaction.RegionMask;
 import juniper.monotone.interaction.RegionMaskAdapter;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.math.BlockPos;
 
 public class MonotoneConfig {
     public boolean runningTasks = false;
@@ -33,6 +35,10 @@ public class MonotoneConfig {
     public Map<InteractionType, List<RegionMask>> interactionMask = new HashMap<>();
     public Map<InteractionType, Boolean> interactionMaskEnabled = new HashMap<>();
     public Map<InteractionType, MaskDisplayType> interactionMaskDisplay = new HashMap<>();
+
+    public LocatorMode locatorMode = LocatorMode.NONE;
+    public BlockPos locatorTarget = null;
+    public float locatorRange = 100f;
 
     public static Gson gson = new GsonBuilder().registerTypeAdapter(RegionMask.class, new RegionMaskAdapter()).setPrettyPrinting().create();
 

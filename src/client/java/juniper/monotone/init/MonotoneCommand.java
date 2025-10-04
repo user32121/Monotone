@@ -6,6 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import juniper.monotone.Monotone;
 import juniper.monotone.command.InteractionMask;
+import juniper.monotone.command.LocatorMode;
 import juniper.monotone.command.RotationPlane;
 import juniper.monotone.command.TaskQueue;
 import juniper.monotone.command.VisibilitySetting;
@@ -13,6 +14,7 @@ import juniper.monotone.pathfinding.PathFind;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.network.ClientCommandSource;
 
 public class MonotoneCommand {
     public static void init() {
@@ -38,6 +40,10 @@ public class MonotoneCommand {
                 .then(ClientCommandManager.literal("display").executes(InteractionMask::getDisplay).then(InteractionMask.DISPLAY_ARG.executes(InteractionMask::setDisplay)))
                 .then(ClientCommandManager.literal("clear").executes(InteractionMask::clear)).then(ClientCommandManager.literal("enable").executes(InteractionMask::enable))
                 .then(ClientCommandManager.literal("disable").executes(InteractionMask::disable))));
+        makeCommand("locate",
+                node -> node.then(LocatorMode.XYZPOS_ARG.executes(LocatorMode::locateXYZ)).then(ClientCommandManager.literal("get").executes(LocatorMode::getTarget))
+                        .then(LocatorMode.XZPOS_ARG.executes(LocatorMode::locateXZ)).then(ClientCommandManager.literal("clear").executes(LocatorMode::clear))
+                        .then(ClientCommandManager.literal("range").executes(LocatorMode::getRange).then(LocatorMode.RANGE_ARG.executes(LocatorMode::setRange))));
     }
 
     private static void makeCommand(String command, Function<LiteralArgumentBuilder<FabricClientCommandSource>, LiteralArgumentBuilder<FabricClientCommandSource>> buildCommand) {
