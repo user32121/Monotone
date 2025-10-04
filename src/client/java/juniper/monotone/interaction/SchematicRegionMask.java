@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 
 public class SchematicRegionMask implements RegionMask {
-    //TODO schematic transforms
+    // TODO schematic transforms
     public final String path;
     public final BlockPos base;
     public transient List<StructureBlockInfo> sbis;
@@ -63,7 +63,7 @@ public class SchematicRegionMask implements RegionMask {
         if (nbt == null) {
             throw new FileNotFoundException(String.format("Could not read file at %s", path2));
         }
-        st.readNbt(Registries.BLOCK, nbt);
+        st.readNbt(Registries.BLOCK.getReadOnlyWrapper(), nbt);
         sbis = ((StructureTemplateAccessor) (Object) st).getBlockInfoLists().get(0).getAll();
         BlockBox bb = st.calculateBoundingBox(new StructurePlacementData(), base);
         from = new BlockPos(bb.getMinX(), bb.getMinY(), bb.getMinZ());

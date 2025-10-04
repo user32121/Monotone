@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import juniper.monotone.mixinInterface.DebugRendererInterface;
 import juniper.monotone.render.InteractionMaskDebugRenderer;
 import juniper.monotone.render.PathFindDebugRenderer;
-import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -30,7 +29,8 @@ public class DebugRendererMixin implements DebugRendererInterface {
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(MatrixStack matrices, Frustum frustum, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo info) {
+    public void render(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX,
+            double cameraY, double cameraZ, CallbackInfo info) {
         pathFindDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
         interactionMaskDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
     }

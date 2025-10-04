@@ -4,7 +4,9 @@
   "version": "${version}",
   "name": "Monotone",
   "description": "A Multipurpose tool. May be inspired by Baritone. This one is more restricted.",
-  "authors": ["Juniper"],
+  "authors": [
+    "Juniper"
+  ],
   "contact": {
     "sources": "https://github.com/user32121/monotone"
   },
@@ -12,7 +14,9 @@
   "icon": "assets/monotone/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": ["juniper.monotone.Monotone"]
+    "client": [
+      "juniper.monotone.Monotone"
+    ]
   },
   "mixins": [
     {
@@ -22,7 +26,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.15.11",
-    "minecraft": "~1.21.2",
+    "minecraft": "~1.21.1",
     "java": ">=21",
     "fabric-api": "*"
   }
