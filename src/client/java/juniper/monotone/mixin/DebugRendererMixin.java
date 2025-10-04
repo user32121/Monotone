@@ -29,8 +29,7 @@ public class DebugRendererMixin implements DebugRendererInterface {
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX,
-            double cameraY, double cameraZ, CallbackInfo info) {
+    public void render(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo info) {
         pathFindDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
         interactionMaskDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
     }

@@ -29,20 +29,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 public class InteractionMask {
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, InteractionType> INTERACTION_ARG = ClientCommandManager
-            .argument("interaction", new InteractionArgumentType());
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> FROM_ARG = ClientCommandManager
-            .argument("from", new BlockPosArgumentType());
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> TO_ARG = ClientCommandManager
-            .argument("to", new BlockPosArgumentType());
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, Integer> INDEX_ARG = ClientCommandManager
-            .argument("index", IntegerArgumentType.integer(0));
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, MaskDisplayType> DISPLAY_ARG = ClientCommandManager
-            .argument("enabled", new MaskDisplayArgumentType());
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, String> PATH_ARG = ClientCommandManager
-            .argument("path", new PathArgumentType());
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> BASE_ARG = ClientCommandManager
-            .argument("base", new BlockPosArgumentType());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, InteractionType> INTERACTION_ARG = ClientCommandManager.argument("interaction", new InteractionArgumentType());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> FROM_ARG = ClientCommandManager.argument("from", new BlockPosArgumentType());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> TO_ARG = ClientCommandManager.argument("to", new BlockPosArgumentType());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, Integer> INDEX_ARG = ClientCommandManager.argument("index", IntegerArgumentType.integer(0));
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, MaskDisplayType> DISPLAY_ARG = ClientCommandManager.argument("enabled", new MaskDisplayArgumentType());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, String> PATH_ARG = ClientCommandManager.argument("path", new PathArgumentType());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> BASE_ARG = ClientCommandManager.argument("base", new BlockPosArgumentType());
 
     public static int addCuboid(CommandContext<FabricClientCommandSource> ctx) {
         FabricClientCommandSource fccs = ctx.getSource();
@@ -139,15 +132,13 @@ public class InteractionMask {
         List<RegionMask> regions = Monotone.CONFIG.interactionMask.get(interaction);
         MaskDisplayType display = ctx.getArgument(DISPLAY_ARG.getName(), MaskDisplayType.class);
         Monotone.CONFIG.interactionMaskDisplay.put(interaction, display);
-        ctx.getSource().sendFeedback(Text.literal(String.format("Set %s mask display to %s (%s regions)",
-                interaction, display, regions.size())));
+        ctx.getSource().sendFeedback(Text.literal(String.format("Set %s mask display to %s (%s regions)", interaction, display, regions.size())));
         return 1;
     }
 
     public static int getDisplay(CommandContext<FabricClientCommandSource> ctx) {
         InteractionType interaction = ctx.getArgument(INTERACTION_ARG.getName(), InteractionType.class);
-        MaskDisplayType display = Monotone.CONFIG.interactionMaskDisplay.getOrDefault(interaction,
-                MaskDisplayType.NONE);
+        MaskDisplayType display = Monotone.CONFIG.interactionMaskDisplay.getOrDefault(interaction, MaskDisplayType.NONE);
         ctx.getSource().sendFeedback(Text.literal(String.format("Displaying %s mask is %s", interaction, display)));
         return 1;
     }
