@@ -90,7 +90,6 @@ public class TaskQueue {
         return 1;
     }
 
-    @SuppressWarnings("resource")
     public static void stopTasks() {
         Monotone.CONFIG.runningTasks = false;
         InputManager.reset();

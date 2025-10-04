@@ -15,7 +15,6 @@ public class KeyInputMixin {
     @Inject(method = "isPressed", at = @At("HEAD"), cancellable = true)
     private void isPressed(CallbackInfoReturnable<Boolean> info) {
         KeyBinding self = (KeyBinding) (Object) this;
-        @SuppressWarnings("resource")
         GameOptions options = MinecraftClient.getInstance().options;
         if (InputManager.forward && self == options.forwardKey) {
             info.setReturnValue(true);
