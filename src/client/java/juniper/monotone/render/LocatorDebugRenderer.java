@@ -27,7 +27,7 @@ public class LocatorDebugRenderer implements Renderer {
             delta = delta.normalize().multiply(Monotone.CONFIG.locatorRange);
             inRangeTarget = delta.add(cameraX, cameraY, cameraZ);
         }
-        Box box = new Box(inRangeTarget, inRangeTarget).expand(0.5).offset(-cameraX, -cameraY, -cameraZ);
+        Box box = new Box(inRangeTarget, inRangeTarget).expand(0.5);
 
         switch (Monotone.CONFIG.locatorMode) {
             case NONE: {
