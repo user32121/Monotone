@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.PosArgument;
+import net.minecraft.command.permission.PermissionPredicate;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -101,7 +102,7 @@ public class NavigateTask implements Task {
         public NavigateTask makeTask(CommandContext<FabricClientCommandSource> ctx) {
             FabricClientCommandSource fccs = ctx.getSource();
             ServerCommandSource scs = new ServerCommandSource(CommandOutput.DUMMY, fccs.getPosition(),
-                    fccs.getRotation(), null, 0, "client_command_source_wrapper",
+                    fccs.getRotation(), null, PermissionPredicate.ALL, "client_command_source_wrapper",
                     Text.literal("Client Command Source Wrapper"), null, fccs.getEntity());
             BlockPos pos = ctx.getArgument(POS_ARG.getName(), PosArgument.class).toAbsoluteBlockPos(scs);
             boolean fuzzy = BoolArgumentType.getBool(ctx, FUZZY_ARG.getName());

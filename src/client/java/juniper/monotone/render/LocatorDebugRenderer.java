@@ -4,20 +4,19 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import juniper.monotone.Monotone;
 import juniper.monotone.command.LocatorMode;
+import net.minecraft.client.render.DrawStyle;
 import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.render.debug.DebugRenderer.Renderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.debug.DebugDataStore;
+import net.minecraft.world.debug.gizmo.GizmoDrawing;
 
 public class LocatorDebugRenderer implements Renderer {
     @Override
-    public void render(
-            MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY,
-            double cameraZ, DebugDataStore store, Frustum frustum) {
+    public void render(double cameraX, double cameraY, double cameraZ, DebugDataStore store, Frustum frustum,
+            float tickProgress) {
         if (Monotone.CONFIG.locatorMode.equals(LocatorMode.NONE)) {
             return;
         }
@@ -35,12 +34,12 @@ public class LocatorDebugRenderer implements Renderer {
                 return;
             }
             case XYZ: {
-                DebugRenderer.drawBox(matrices, vertexConsumers, box, 0, 1, 0, 0.5f);
+                GizmoDrawing.box(box, DrawStyle.filled(ColorHelper.getArgb(127, 0, 255, 0)));
                 break;
             }
             case XZ: {
                 box = box.expand(0, 1000, 0);
-                DebugRenderer.drawBox(matrices, vertexConsumers, box, 0, 1, 0, 0.5f);
+                GizmoDrawing.box(box, DrawStyle.filled(ColorHelper.getArgb(127, 0, 255, 0)));
                 break;
             }
             default: {

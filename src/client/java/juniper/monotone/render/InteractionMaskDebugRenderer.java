@@ -8,23 +8,22 @@ import juniper.monotone.interaction.MaskDisplayType;
 import juniper.monotone.interaction.RegionMask;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.DrawStyle;
 import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.render.debug.DebugRenderer.Renderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.debug.DebugDataStore;
+import net.minecraft.world.debug.gizmo.GizmoDrawing;
 
 public class InteractionMaskDebugRenderer implements Renderer {
     @Override
-    public void render(
-            MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY,
-            double cameraZ, DebugDataStore store, Frustum frustum) {
+    public void render(double cameraX, double cameraY, double cameraZ, DebugDataStore store, Frustum frustum,
+            float tickProgress) {
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
         for (InteractionType it : Monotone.CONFIG.interactionMask.keySet()) {
@@ -46,14 +45,13 @@ public class InteractionMaskDebugRenderer implements Renderer {
             for (RegionMask rm : Monotone.CONFIG.interactionMask.get(it)) {
                 if (mdt.equals(MaskDisplayType.BOUNDS)) {
                     Pair<BlockPos, BlockPos> bounds = rm.getBounds();
-                    DebugRenderer.drawBox(matrices, vertexConsumers, bounds.getLeft(), bounds.getRight(),
-                            (float) col.x, (float) col.y, (float) col.z, 0.5f);
+                    GizmoDrawing.box(Box.enclosing(bounds.getLeft(), bounds.getRight()),
+                            DrawStyle.filled(ColorHelper.withAlpha(0.5f, ColorHelper.getArgb(col))));
                 } else if (mdt.equals(MaskDisplayType.UNMATCHING)) {
                     for (Pair<BlockPos, BlockState> pair : rm) {
                         if (blockRenderPredicate.test(pair)) {
-                            DebugRenderer.drawBox(matrices, vertexConsumers,
-                                    new Box(pair.getLeft()).offset(-cameraX, -cameraY, -cameraZ), (float) col.x,
-                                    (float) col.y, (float) col.z, 0.5f);
+                            GizmoDrawing.box(new Box(pair.getLeft()).offset(-cameraX, -cameraY, -cameraZ),
+                                    DrawStyle.filled(ColorHelper.withAlpha(0.5f, ColorHelper.getArgb(col))));
                         }
                     }
                 }

@@ -3,19 +3,16 @@ package juniper.monotone.render;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Matrix4f;
-
 import juniper.monotone.pathfinding.PathFind;
 import juniper.monotone.pathfinding.PathFind.Tile;
 import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.DebugRenderer.Renderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
+import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.debug.DebugDataStore;
+import net.minecraft.world.debug.gizmo.GizmoDrawing;
 
 public class PathFindDebugRenderer implements Renderer {
     private List<PathFind> paths = new ArrayList<>();
@@ -25,9 +22,8 @@ public class PathFindDebugRenderer implements Renderer {
     }
 
     @Override
-    public void render(
-            MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY,
-            double cameraZ, DebugDataStore store, Frustum frustum) {
+    public void render(double cameraX, double cameraY, double cameraZ, DebugDataStore store, Frustum frustum,
+            float tickProgress) {
         if (!PathFind.getShowPath()) {
             return;
         }
@@ -36,13 +32,13 @@ public class PathFindDebugRenderer implements Renderer {
             if (path.path == null) {
                 continue;
             }
-            Matrix4f matrix4f = matrices.peek().getPositionMatrix();
-            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getDebugLineStrip(1.0));
+            Vec3d prev = null;
             for (Pair<Vec3i, Tile> cur : path.path) {
-                Vec3i pos = cur.getLeft();
-                vertexConsumer.vertex(matrix4f, pos.getX() + 0.5f - (float) cameraX,
-                        pos.getY() + 0.5f - (float) cameraY, pos.getZ() + 0.5f - (float) cameraZ)
-                        .color(0.0f, 1.0f, 0.0f, 1.0f);
+                Vec3d pos = Vec3d.ofCenter(cur.getLeft());
+                if (prev != null) {
+                    GizmoDrawing.line(prev, pos, ColorHelper.getArgb(255, 0, 255, 0));
+                }
+                prev = pos;
             }
             if (path.path.isEmpty()) {
                 paths.remove(i);

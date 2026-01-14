@@ -11,9 +11,7 @@ import juniper.monotone.render.LocatorDebugRenderer;
 import juniper.monotone.render.PathFindDebugRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.DebugRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.world.debug.DebugDataStore;
 
 @Mixin(DebugRenderer.class)
@@ -28,13 +26,12 @@ public class DebugRendererMixin implements DebugRendererInterface {
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(
-            MatrixStack matrices, Frustum frustum, VertexConsumerProvider.Immediate vertexConsumers, double cameraX,
-            double cameraY, double cameraZ, boolean lateDebug, CallbackInfo info) {
+    public void render(Frustum frustum, double cameraX, double cameraY, double cameraZ, float tickProgress,
+            CallbackInfo info) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         DebugDataStore store = minecraftClient.getNetworkHandler().getDebugDataStore();
-        pathFindDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, store, frustum);
-        interactionMaskDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, store, frustum);
-        locatorDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, store, frustum);
+        pathFindDebugRenderer.render(cameraX, cameraY, cameraZ, store, frustum, tickProgress);
+        interactionMaskDebugRenderer.render(cameraX, cameraY, cameraZ, store, frustum, tickProgress);
+        locatorDebugRenderer.render(cameraX, cameraY, cameraZ, store, frustum, tickProgress);
     }
 }

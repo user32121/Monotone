@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.PosArgument;
 import net.minecraft.command.argument.Vec2ArgumentType;
+import net.minecraft.command.permission.PermissionPredicate;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -18,18 +19,23 @@ import net.minecraft.util.math.BlockPos;
 public enum LocatorMode {
     NONE, XYZ, XZ;
 
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> XYZPOS_ARG = ClientCommandManager.argument("xyz", new BlockPosArgumentType());
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> XZPOS_ARG = ClientCommandManager.argument("xz", new Vec2ArgumentType(true));
-    public static final RequiredArgumentBuilder<FabricClientCommandSource, Float> RANGE_ARG = ClientCommandManager.argument("blocks", FloatArgumentType.floatArg(0));
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> XYZPOS_ARG = ClientCommandManager
+            .argument("xyz", new BlockPosArgumentType());
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, PosArgument> XZPOS_ARG = ClientCommandManager
+            .argument("xz", new Vec2ArgumentType(true));
+    public static final RequiredArgumentBuilder<FabricClientCommandSource, Float> RANGE_ARG = ClientCommandManager
+            .argument("blocks", FloatArgumentType.floatArg(0));
 
     public static int getTarget(CommandContext<FabricClientCommandSource> ctx) {
-        ctx.getSource().sendFeedback(Text.literal(String.format("Target is %s (%s)", Monotone.CONFIG.locatorTarget, Monotone.CONFIG.locatorMode)));
+        ctx.getSource().sendFeedback(Text.literal(
+                String.format("Target is %s (%s)", Monotone.CONFIG.locatorTarget, Monotone.CONFIG.locatorMode)));
         return 1;
     }
 
     public static int locateXYZ(CommandContext<FabricClientCommandSource> ctx) {
         FabricClientCommandSource fccs = ctx.getSource();
-        ServerCommandSource scs = new ServerCommandSource(CommandOutput.DUMMY, fccs.getPosition(), fccs.getRotation(), null, 0, "client_command_source_wrapper",
+        ServerCommandSource scs = new ServerCommandSource(CommandOutput.DUMMY, fccs.getPosition(), fccs.getRotation(),
+                null, PermissionPredicate.ALL, "client_command_source_wrapper",
                 Text.literal("Client Command Source Wrapper"), null, fccs.getEntity());
         BlockPos pos = ctx.getArgument(XYZPOS_ARG.getName(), PosArgument.class).toAbsoluteBlockPos(scs);
         Monotone.CONFIG.locatorTarget = pos;
@@ -40,7 +46,8 @@ public enum LocatorMode {
 
     public static int locateXZ(CommandContext<FabricClientCommandSource> ctx) {
         FabricClientCommandSource fccs = ctx.getSource();
-        ServerCommandSource scs = new ServerCommandSource(CommandOutput.DUMMY, fccs.getPosition(), fccs.getRotation(), null, 0, "client_command_source_wrapper",
+        ServerCommandSource scs = new ServerCommandSource(CommandOutput.DUMMY, fccs.getPosition(), fccs.getRotation(),
+                null, PermissionPredicate.ALL, "client_command_source_wrapper",
                 Text.literal("Client Command Source Wrapper"), null, fccs.getEntity());
         BlockPos pos = ctx.getArgument(XZPOS_ARG.getName(), PosArgument.class).toAbsoluteBlockPos(scs);
         Monotone.CONFIG.locatorTarget = pos;
