@@ -16,7 +16,7 @@ public abstract class FeedingMixin implements FeedingInterface {
     @Inject(method = "handleStatus", at = @At("HEAD"))
     public void handleStatus(byte status, CallbackInfo info) {
         if (status == EntityStatuses.ADD_BREEDING_PARTICLES) {
-            lastFed = ((AnimalEntity) (Object) this).getWorld().getTime();
+            lastFed = ((AnimalEntity) (Object) this).getEntityWorld().getTime();
         }
     }
 

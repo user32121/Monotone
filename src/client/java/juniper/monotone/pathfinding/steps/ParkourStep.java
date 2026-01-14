@@ -41,7 +41,8 @@ public class ParkourStep implements Step {
             return null;
         }
         for (BlockPos p : BlockPos.iterate(new BlockPos(oldPos), new BlockPos(newPos))) {
-            if ((!p.equals(oldPos.down()) && !p.equals(newPos.down()) && !grid.hasTileType(p, TILE_TYPE.EMPTY)) || !grid.hasTileType(p.up(), TILE_TYPE.EMPTY)
+            if ((!p.equals(oldPos.down()) && !p.equals(newPos.down()) && !grid.hasTileType(p, TILE_TYPE.EMPTY))
+                    || !grid.hasTileType(p.up(), TILE_TYPE.EMPTY)
                     || !grid.hasTileType(p.up(2), TILE_TYPE.EMPTY)) {
                 return null;
             }
@@ -56,8 +57,10 @@ public class ParkourStep implements Step {
 
     @Override
     public boolean tick(MinecraftClient client, Vec3i destination) {
-        Vec3d destinationDelta = client.player.getPos().subtract(Vec3d.ofBottomCenter(destination));
-        float destinationDeltaAngle = MathHelper.subtractAngles((float) Math.toDegrees(Math.atan2(destinationDelta.z, destinationDelta.x)) + 90, client.player.getYaw());
+        Vec3d destinationDelta = client.player.getEntityPos().subtract(Vec3d.ofBottomCenter(destination));
+        float destinationDeltaAngle = MathHelper.subtractAngles(
+                (float) Math.toDegrees(Math.atan2(destinationDelta.z, destinationDelta.x)) + 90,
+                client.player.getYaw());
         switch (state) {
             case PREPARING: {
                 InputManager.reset();
@@ -68,13 +71,16 @@ public class ParkourStep implements Step {
                 if (!collisions.hasNext()) {
                     break;
                 }
-                Vec3d blockDelta = client.player.getPos().subtract(collisions.next().getBoundingBox().getCenter()).withAxis(Axis.Y, 0);
+                Vec3d blockDelta = client.player.getEntityPos().subtract(collisions.next().getBoundingBox().getCenter())
+                        .withAxis(Axis.Y, 0);
                 if (Math.abs(destinationDeltaAngle) >= 1) {
                     MouseInputAccessor mia = (MouseInputAccessor) (Object) client.mouse;
                     mia.setCursorDeltaX(mia.getCursorDeltaX() - destinationDeltaAngle * 2);
                 }
                 if (!blockDelta.isInRange(Vec3d.ZERO, 0.1)) {
-                    float blockDeltaAngle = MathHelper.subtractAngles((float) Math.toDegrees(Math.atan2(blockDelta.z, blockDelta.x)) + 90, client.player.getYaw());
+                    float blockDeltaAngle = MathHelper.subtractAngles(
+                            (float) Math.toDegrees(Math.atan2(blockDelta.z, blockDelta.x)) + 90,
+                            client.player.getYaw());
                     InputManager.forward = MathHelper.angleBetween(blockDeltaAngle, 0) <= 60;
                     InputManager.left = MathHelper.angleBetween(blockDeltaAngle, 90) <= 60;
                     InputManager.back = MathHelper.angleBetween(blockDeltaAngle, 180) <= 60;
@@ -94,16 +100,18 @@ public class ParkourStep implements Step {
                 if (destinationDelta.isInRange(Vec3d.ZERO, 4)) {
                     Box bb = client.player.getBoundingBox().offset(0, -0.001, 0);
                     if (!Iterables.isEmpty(client.world.getCollisions(client.player, bb))
-                            && Iterables.isEmpty(client.world.getCollisions(client.player, bb.offset(client.player.getVelocity().multiply(3))))) {
+                            && Iterables.isEmpty(client.world.getCollisions(client.player,
+                                    bb.offset(client.player.getVelocity().multiply(3))))) {
                         Monotone.LOGGER.info("jump from {}", client.player.getBlockPos());
                         InputManager.jump = true;
                         state = STATE.JUMPED;
                     }
                 } else {
-                    //jump at last moment if jump is long
+                    // jump at last moment if jump is long
                     Box bb = client.player.getBoundingBox().offset(0, -0.001, 0);
                     if (!Iterables.isEmpty(client.world.getCollisions(client.player, bb))
-                            && Iterables.isEmpty(client.world.getCollisions(client.player, bb.offset(client.player.getVelocity())))) {
+                            && Iterables.isEmpty(client.world.getCollisions(client.player,
+                                    bb.offset(client.player.getVelocity())))) {
                         Monotone.LOGGER.info("late jump from {}", client.player.getBlockPos());
                         InputManager.jump = true;
                         state = STATE.JUMPED;
@@ -112,7 +120,8 @@ public class ParkourStep implements Step {
                 break;
             }
             case JUMPED: {
-                if (client.player.getBlockPos().withY(destination.getY()).equals(destination) || client.player.isOnGround()) {
+                if (client.player.getBlockPos().withY(destination.getY()).equals(destination)
+                        || client.player.isOnGround()) {
                     InputManager.reset();
                     InputManager.sneak = true;
                     InputManager.back = true;

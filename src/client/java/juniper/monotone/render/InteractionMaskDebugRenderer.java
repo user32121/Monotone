@@ -8,6 +8,7 @@ import juniper.monotone.interaction.MaskDisplayType;
 import juniper.monotone.interaction.RegionMask;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.render.debug.DebugRenderer.Renderer;
@@ -17,11 +18,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.debug.DebugDataStore;
 
 public class InteractionMaskDebugRenderer implements Renderer {
     @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY,
-            double cameraZ) {
+    public void render(
+            MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY,
+            double cameraZ, DebugDataStore store, Frustum frustum) {
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
         for (InteractionType it : Monotone.CONFIG.interactionMask.keySet()) {

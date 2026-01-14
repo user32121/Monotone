@@ -63,7 +63,7 @@ public class SchematicRegionMask implements RegionMask {
         if (nbt == null) {
             throw new FileNotFoundException(String.format("Could not read file at %s", path2));
         }
-        st.readNbt(Registries.BLOCK.getReadOnlyWrapper(), nbt);
+        st.readNbt(Registries.BLOCK, nbt);
         sbis = ((StructureTemplateAccessor) (Object) st).getBlockInfoLists().get(0).getAll();
         BlockBox bb = st.calculateBoundingBox(new StructurePlacementData(), base);
         from = new BlockPos(bb.getMinX(), bb.getMinY(), bb.getMinZ());

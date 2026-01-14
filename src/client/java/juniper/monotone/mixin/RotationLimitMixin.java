@@ -25,9 +25,9 @@ public abstract class RotationLimitMixin {
         self.setPitch(RotationPlane.limitIfSet(RotationPlane.PITCH, self.getPitch() + deltaPitch));
         self.setYaw(RotationPlane.limitIfSet(RotationPlane.YAW, self.getYaw() + deltaYaw));
         self.setPitch(MathHelper.clamp(self.getPitch(), -90.0f, 90.0f));
-        self.prevPitch = RotationPlane.limitIfSet(RotationPlane.PITCH, self.prevPitch + deltaPitch);
-        self.prevYaw = RotationPlane.limitIfSet(RotationPlane.YAW, self.prevYaw + deltaYaw);
-        self.prevPitch = MathHelper.clamp(self.prevPitch, -90.0f, 90.0f);
+        self.lastPitch = RotationPlane.limitIfSet(RotationPlane.PITCH, self.lastPitch + deltaPitch);
+        self.lastYaw = RotationPlane.limitIfSet(RotationPlane.YAW, self.lastYaw + deltaYaw);
+        self.lastPitch = MathHelper.clamp(self.lastPitch, -90.0f, 90.0f);
         if (getVehicle() != null) {
             getVehicle().onPassengerLookAround(self);
         }

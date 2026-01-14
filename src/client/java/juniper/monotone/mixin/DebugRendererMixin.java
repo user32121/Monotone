@@ -9,9 +9,12 @@ import juniper.monotone.mixinInterface.DebugRendererInterface;
 import juniper.monotone.render.InteractionMaskDebugRenderer;
 import juniper.monotone.render.LocatorDebugRenderer;
 import juniper.monotone.render.PathFindDebugRenderer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.world.debug.DebugDataStore;
 
 @Mixin(DebugRenderer.class)
 public class DebugRendererMixin implements DebugRendererInterface {
@@ -24,17 +27,14 @@ public class DebugRendererMixin implements DebugRendererInterface {
         return pathFindDebugRenderer;
     }
 
-    @Inject(method = "reset", at = @At("TAIL"))
-    public void reset(CallbackInfo info) {
-        pathFindDebugRenderer.clear();
-        interactionMaskDebugRenderer.clear();
-        locatorDebugRenderer.clear();
-    }
-
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo info) {
-        pathFindDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-        interactionMaskDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-        locatorDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+    public void render(
+            MatrixStack matrices, Frustum frustum, VertexConsumerProvider.Immediate vertexConsumers, double cameraX,
+            double cameraY, double cameraZ, boolean lateDebug, CallbackInfo info) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        DebugDataStore store = minecraftClient.getNetworkHandler().getDebugDataStore();
+        pathFindDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, store, frustum);
+        interactionMaskDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, store, frustum);
+        locatorDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, store, frustum);
     }
 }

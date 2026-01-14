@@ -4,16 +4,20 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import juniper.monotone.Monotone;
 import juniper.monotone.command.LocatorMode;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.render.debug.DebugRenderer.Renderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.debug.DebugDataStore;
 
 public class LocatorDebugRenderer implements Renderer {
     @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
+    public void render(
+            MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY,
+            double cameraZ, DebugDataStore store, Frustum frustum) {
         if (Monotone.CONFIG.locatorMode.equals(LocatorMode.NONE)) {
             return;
         }

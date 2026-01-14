@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import juniper.monotone.mixinInterface.ReadOnlyWorldInterface;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -46,15 +46,16 @@ public abstract class ReadOnlyWorldMixin implements ReadOnlyWorldInterface {
     }
 
     @Inject(method = "setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;II)Z", at = @At("HEAD"), cancellable = true)
-    private void setBlockState(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, CallbackInfoReturnable<Boolean> info) {
+    private void setBlockState(BlockPos pos, BlockState state, int flags, int maxUpdateDepth,
+            CallbackInfoReturnable<Boolean> info) {
         if (enabled) {
             blockChanges.add(new Pair<BlockPos, BlockState>(pos, state));
             info.setReturnValue(true);
         }
     }
 
-    @Inject(method = "playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/registry/entry/RegistryEntry;Lnet/minecraft/sound/SoundCategory;FFJ)V", at = @At("HEAD"), cancellable = true)
-    private void playSound(@Nullable PlayerEntity source, double x, double y, double z, RegistryEntry<SoundEvent> sound,
+    @Inject(method = "playSound(Lnet/minecraft/entity/Entity;DDDLnet/minecraft/registry/entry/RegistryEntry;Lnet/minecraft/sound/SoundCategory;FFJ)V", at = @At("HEAD"), cancellable = true)
+    private void playSound(@Nullable Entity source, double x, double y, double z, RegistryEntry<SoundEvent> sound,
             SoundCategory category, float volume, float pitch, long seed, CallbackInfo info) {
         if (enabled) {
             info.cancel();

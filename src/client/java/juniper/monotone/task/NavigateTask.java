@@ -40,7 +40,7 @@ public class NavigateTask implements Task {
         grid = new GridView(client.world, client.player.getChunkPos(), new ChunkPos(target));
         path = new PathFind(client.player.getBlockPos(), target, grid, fuzzy);
         path.start();
-        ((DebugRendererInterface) (Object) client.debugRenderer).getPathFindDebugRenderer().addPath(path);
+        ((DebugRendererInterface) (Object) client.worldRenderer.debugRenderer).getPathFindDebugRenderer().addPath(path);
     }
 
     @Override
@@ -52,12 +52,12 @@ public class NavigateTask implements Task {
             client.player.sendMessage(t, false);
         }
 
-        //wait for pathfinding to finish
+        // wait for pathfinding to finish
         if (path.isAlive()) {
             return false;
         }
 
-        //follow path
+        // follow path
         if (path.path == null || path.path.size() == 0) {
             InputManager.reset();
             return true;
@@ -77,8 +77,10 @@ public class NavigateTask implements Task {
     }
 
     public static class NavigateTaskFactory implements TaskFactory<NavigateTask> {
-        public static final RequiredArgumentBuilder<FabricClientCommandSource, ?> POS_ARG = ClientCommandManager.argument("position", BlockPosArgumentType.blockPos());
-        public static final RequiredArgumentBuilder<FabricClientCommandSource, ?> FUZZY_ARG = ClientCommandManager.argument("fuzzy", BoolArgumentType.bool());
+        public static final RequiredArgumentBuilder<FabricClientCommandSource, ?> POS_ARG = ClientCommandManager
+                .argument("position", BlockPosArgumentType.blockPos());
+        public static final RequiredArgumentBuilder<FabricClientCommandSource, ?> FUZZY_ARG = ClientCommandManager
+                .argument("fuzzy", BoolArgumentType.bool());
 
         @Override
         public String getTaskName() {
@@ -98,7 +100,8 @@ public class NavigateTask implements Task {
         @Override
         public NavigateTask makeTask(CommandContext<FabricClientCommandSource> ctx) {
             FabricClientCommandSource fccs = ctx.getSource();
-            ServerCommandSource scs = new ServerCommandSource(CommandOutput.DUMMY, fccs.getPosition(), fccs.getRotation(), null, 0, "client_command_source_wrapper",
+            ServerCommandSource scs = new ServerCommandSource(CommandOutput.DUMMY, fccs.getPosition(),
+                    fccs.getRotation(), null, 0, "client_command_source_wrapper",
                     Text.literal("Client Command Source Wrapper"), null, fccs.getEntity());
             BlockPos pos = ctx.getArgument(POS_ARG.getName(), PosArgument.class).toAbsoluteBlockPos(scs);
             boolean fuzzy = BoolArgumentType.getBool(ctx, FUZZY_ARG.getName());
