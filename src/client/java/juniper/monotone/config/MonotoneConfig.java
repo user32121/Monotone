@@ -22,6 +22,7 @@ import juniper.monotone.interaction.InteractionType;
 import juniper.monotone.interaction.MaskDisplayType;
 import juniper.monotone.interaction.RegionMask;
 import juniper.monotone.interaction.RegionMaskAdapter;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
 
@@ -47,7 +48,7 @@ public class MonotoneConfig {
     public static Gson gson = new GsonBuilder().registerTypeAdapter(RegionMask.class, new RegionMaskAdapter()).setPrettyPrinting().create();
 
     public static MonotoneConfig load() {
-        Path filename = Paths.get("config", "monotone_config.json");
+        Path filename = FabricLoader.getInstance().getConfigDir().resolve("monotone_config.json");
         try (FileReader fr = new FileReader(filename.toFile())) {
             MonotoneConfig mc = gson.fromJson(fr, MonotoneConfig.class);
             return mc == null ? new MonotoneConfig() : mc;
