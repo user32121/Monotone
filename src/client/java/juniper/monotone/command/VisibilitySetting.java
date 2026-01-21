@@ -1,8 +1,6 @@
 package juniper.monotone.command;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import com.mojang.brigadier.StringReader;
@@ -15,6 +13,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
+import juniper.monotone.Monotone;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandSource;
@@ -48,8 +47,6 @@ public enum VisibilitySetting {
         }
     }
 
-    public static final Map<VisibilitySetting, Boolean> HIGHLIGHT = new HashMap<>();
-    public static final Map<EntityType<?>, Boolean> HIGHLIGHT_ENTITY = new HashMap<>();
     public static final RequiredArgumentBuilder<FabricClientCommandSource, VisibilitySetting> SETTING_ARG = ClientCommandManager.argument("setting", new HighlightTargetArgument());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, Boolean> VALUE_ARG = ClientCommandManager.argument("value", BoolArgumentType.bool());
     public static final RequiredArgumentBuilder<FabricClientCommandSource, ?> ENTITY_TYPE_ARG = ClientCommandManager.argument("entity_type",
@@ -57,7 +54,7 @@ public enum VisibilitySetting {
 
     public static int getHighlight(CommandContext<FabricClientCommandSource> ctx) {
         VisibilitySetting target = ctx.getArgument(SETTING_ARG.getName(), VisibilitySetting.class);
-        boolean b = HIGHLIGHT.getOrDefault(target, false);
+        boolean b = Monotone.CONFIG.highlight.getOrDefault(target, false);
         ctx.getSource().sendFeedback(Text.literal(String.format("Highlight for %s is %s", target, b)));
         return 1;
     }
@@ -65,7 +62,7 @@ public enum VisibilitySetting {
     public static int setHighlight(CommandContext<FabricClientCommandSource> ctx) {
         VisibilitySetting target = ctx.getArgument(SETTING_ARG.getName(), VisibilitySetting.class);
         boolean b = BoolArgumentType.getBool(ctx, VALUE_ARG.getName());
-        HIGHLIGHT.put(target, b);
+        Monotone.CONFIG.highlight.put(target, b);
         ctx.getSource().sendFeedback(Text.literal(String.format("Highlight for %s set to %s", target, b)));
         return 1;
     }
@@ -74,7 +71,7 @@ public enum VisibilitySetting {
         @SuppressWarnings("unchecked")
         RegistryEntry.Reference<EntityType<?>> reference = ctx.getArgument(ENTITY_TYPE_ARG.getName(), RegistryEntry.Reference.class);
         EntityType<?> et = reference.value();
-        boolean b = HIGHLIGHT_ENTITY.getOrDefault(et, false);
+        boolean b = Monotone.CONFIG.highlightEntity.getOrDefault(et, false);
         ctx.getSource().sendFeedback(Text.literal(String.format("Highlight for %s is %s", et, b)));
         return 1;
     }
@@ -84,7 +81,7 @@ public enum VisibilitySetting {
         RegistryEntry.Reference<EntityType<?>> reference = ctx.getArgument(ENTITY_TYPE_ARG.getName(), RegistryEntry.Reference.class);
         EntityType<?> et = reference.value();
         boolean b = BoolArgumentType.getBool(ctx, VALUE_ARG.getName());
-        HIGHLIGHT_ENTITY.put(et, b);
+        Monotone.CONFIG.highlightEntity.put(et.getUntranslatedName(), b);
         ctx.getSource().sendFeedback(Text.literal(String.format("Highlight for %s set to %s", et, b)));
         return 1;
     }

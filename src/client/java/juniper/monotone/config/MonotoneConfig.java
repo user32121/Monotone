@@ -17,6 +17,7 @@ import com.google.gson.JsonSyntaxException;
 
 import juniper.monotone.Monotone;
 import juniper.monotone.command.LocatorMode;
+import juniper.monotone.command.VisibilitySetting;
 import juniper.monotone.interaction.InteractionType;
 import juniper.monotone.interaction.MaskDisplayType;
 import juniper.monotone.interaction.RegionMask;
@@ -31,6 +32,9 @@ public class MonotoneConfig {
     public float pathfindSearchRadiusChunks = 2;
     public float pathfindSearchAngleDegrees = 60;
     public boolean pathfindShowPath = false;
+
+    public Map<VisibilitySetting, Boolean> highlight = new HashMap<>();
+    public Map<String, Boolean> highlightEntity = new HashMap<>();
 
     public Map<InteractionType, List<RegionMask>> interactionMask = new HashMap<>();
     public Map<InteractionType, Boolean> interactionMaskEnabled = new HashMap<>();
